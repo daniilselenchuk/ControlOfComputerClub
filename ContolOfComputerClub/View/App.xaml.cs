@@ -1,14 +1,12 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.ViewModel;
-using ViewModel.Messages;
+using ControlOfComputerClub.ViewModel.Messages;
 
 namespace ControlOfComputerClub.View
 {
     /// <summary>
-    /// Логика взаимодействия для App.xaml
+    /// Логика взаимодействия для App.xaml.
     /// </summary>
     public partial class App : Application
     {
