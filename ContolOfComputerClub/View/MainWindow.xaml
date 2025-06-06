@@ -5,17 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ControlOfComputerClub.View" 
         xmlns:viewmodel="clr-namespace:ControlOfComputerClub.ViewModel;assembly=ViewModel" 
-        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing"
         d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
+        Icon="resources\ContactsApp_96x96.ico"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Главная" Height="450" Width="800">
     <Window.InputBindings>
         <KeyBinding Key="X" Modifiers="Alt" Command="{Binding ExitCommand}" />
         <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ShowAboutCommand}" />
     </Window.InputBindings>
-    
+
     <Grid>
-        <Menu>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Главное меню -->
+        <Menu x:Name="Menu" Grid.Row="0">
             <MenuItem Header="Файл">
                 <MenuItem Header="Выход" Command="{Binding ExitCommand}" 
                           InputGestureText="Alt+X"/>
@@ -23,5 +30,24 @@
                           InputGestureText="Alt+I"/>
             </MenuItem>
         </Menu>
+
+        <!-- Таблица для отображения данных -->
+        <DataGrid x:Name="EmployeesGrid" Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  ItemsSource="{Binding Employees}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding EmployeeId}" 
+                                    Width="*"/>
+                <DataGridTextColumn Header="Имя" Binding="{Binding Name}" 
+                                    Width="2*"/>
+                <DataGridTextColumn Header="Должность" Binding="{Binding JobTitle}" 
+                                    Width="2*"/>
+                <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}" 
+                                    Width="3*"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

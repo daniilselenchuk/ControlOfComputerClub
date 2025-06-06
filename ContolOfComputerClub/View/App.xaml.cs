@@ -27,7 +27,10 @@ namespace ControlOfComputerClub.View
 
         private void HandleExitMessage(object recipient, ExitMessage message)
         {
-            Application.Current.Shutdown();
+            var result = MessageBox.Show("Вы действительно хотите выйти?", "Выход",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes) Application.Current.Shutdown();
+
         }
 
         private void HandleShowAboutMessage(object recipient, ShowAboutMessage message)
