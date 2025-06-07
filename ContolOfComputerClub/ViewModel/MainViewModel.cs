@@ -23,6 +23,29 @@ namespace ControlOfComputerClub.ViewModel
             LoadEmployees();
         }
 
+        [RelayCommand]
+        private void OpenClientsWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenClientsWindowMessage());
+        }
+
+        [RelayCommand]
+        private void OpenBookingRequestsWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenBookingRequestsWindowMessage());
+        }
+
+        [RelayCommand]
+        private void OpenEmployeesWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenEmployeesWindowMessage());
+        }
+
+        [RelayCommand]
+        private void OpenWorkplacesWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenWorkplacesWindowMessage());
+        }
 
         [RelayCommand]
         private void Exit()

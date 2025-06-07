@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.ViewModel;
 using ControlOfComputerClub.ViewModel.Messages;
+using View;
 
 namespace ControlOfComputerClub.View
 {
@@ -23,6 +24,10 @@ namespace ControlOfComputerClub.View
         {
             WeakReferenceMessenger.Default.Register<ExitMessage>(this, HandleExitMessage);
             WeakReferenceMessenger.Default.Register<ShowAboutMessage>(this, HandleShowAboutMessage);
+            WeakReferenceMessenger.Default.Register<OpenClientsWindowMessage>(this, HandleOpenClientsWindowMessage);
+            WeakReferenceMessenger.Default.Register<OpenBookingRequestsWindowMessage>(this, HandleOpenBookingRequestsWindowMessage);
+            WeakReferenceMessenger.Default.Register<OpenEmployeesWindowMessage>(this, HandleOpenEmployeesWindowMessage);
+            WeakReferenceMessenger.Default.Register<OpenWorkplacesWindowMessage>(this, HandleOpenWorkplacesWindowMessage);
         }
 
         private void HandleExitMessage(object recipient, ExitMessage message)
@@ -37,6 +42,30 @@ namespace ControlOfComputerClub.View
         {
             MessageBox.Show("(C)ТУСУР, КСУП, Селенчук Даниил Олегович, группа 573-2, 2025","О программе", 
                 MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void HandleOpenClientsWindowMessage(object recipient, OpenClientsWindowMessage message)
+        {
+            ClientsWindow clientsWindow = new ClientsWindow();
+            clientsWindow.Show();
+        }
+
+        private void HandleOpenBookingRequestsWindowMessage(object recipient, OpenBookingRequestsWindowMessage message)
+        {
+            BookingRequestsWindow bookingRequestsWindow = new BookingRequestsWindow();
+            bookingRequestsWindow.Show();
+        }
+
+        private void HandleOpenEmployeesWindowMessage(object recipient, OpenEmployeesWindowMessage message)
+        {
+            EmployeesWindow employeesWindow = new EmployeesWindow();
+            employeesWindow.Show();
+        }
+
+        private void HandleOpenWorkplacesWindowMessage(object recipient, OpenWorkplacesWindowMessage message)
+        {
+            WorkplacesWindow workplacesWindow = new WorkplacesWindow();
+            workplacesWindow.Show();
         }
     }
 

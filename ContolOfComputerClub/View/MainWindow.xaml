@@ -13,6 +13,10 @@
     <Window.InputBindings>
         <KeyBinding Key="X" Modifiers="Alt" Command="{Binding ExitCommand}" />
         <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ShowAboutCommand}" />
+        <KeyBinding Key="B" Modifiers="Alt" Command="{Binding OpenClientsWindowCommand}"/>
+        <KeyBinding Key="W" Modifiers="Alt" Command="{Binding OpenEmployeesWindowCommand}"/>
+        <KeyBinding Key="V" Modifiers="Alt" Command="{Binding OpenWorkplacesWindowCommand}"/>
+        <KeyBinding Key="T" Modifiers="Alt" Command="{Binding OpenBookingRequestsWindowCommand}"/>
     </Window.InputBindings>
 
     <Grid>
@@ -28,6 +32,18 @@
                           InputGestureText="Alt+X"/>
                 <MenuItem Header="О программе" Command="{Binding ShowAboutCommand}" 
                           InputGestureText="Alt+I"/>
+            </MenuItem>
+            <MenuItem Header="Справочники">
+                <MenuItem Header="Клиенты" Command="{Binding OpenClientsWindowCommand}"
+                          InputGestureText="Alt+B"/>
+                <MenuItem Header="Сотрудники" Command="{Binding OpenEmployeesWindowCommand}"
+                          InputGestureText="Alt+W"/>
+                <MenuItem Header="Рабочие места" Command="{Binding OpenWorkplacesWindowCommand}" 
+                          InputGestureText="Alt+V"/>
+            </MenuItem>
+            <MenuItem Header="Документы">
+                <MenuItem Header="Запросы на бронирование" Command="{Binding OpenBookingRequestsWindowCommand}"
+                          InputGestureText="Alt+T"/>
             </MenuItem>
         </Menu>
 
