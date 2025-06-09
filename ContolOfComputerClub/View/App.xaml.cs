@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.ViewModel;
 using ControlOfComputerClub.ViewModel.Messages;
-using View;
+using ControlOfComputerClub.View;
 
 namespace ControlOfComputerClub.View
 {
@@ -47,6 +47,8 @@ namespace ControlOfComputerClub.View
         private void HandleOpenClientsWindowMessage(object recipient, OpenClientsWindowMessage message)
         {
             ClientsWindow clientsWindow = new ClientsWindow();
+            ClientsViewModel clientsViewModel = new ClientsViewModel();
+            clientsWindow.DataContext = clientsViewModel;
             clientsWindow.Show();
         }
 

@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace View
+namespace ControlOfComputerClub.View
 {
     /// <summary>
     /// Логика взаимодействия для ClientsWindow.xaml
@@ -23,7 +23,6 @@ namespace View
         public ClientsWindow()
         {
             InitializeComponent();
-            this.DataContext = new ClientsViewModel();
         }
     }
 }
