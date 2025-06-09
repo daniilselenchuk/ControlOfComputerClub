@@ -3,10 +3,96 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ControlOfComputerClub.View"
+        xmlns:converters="clr-namespace:ControlOfComputerClub.View.Converters"
+        xmlns:viewmodel="clr-namespace:ControlOfComputerClub.ViewModel;assembly=ViewModel"
+        Title="Заявки на бронирование" Height="500" Width="800"
         mc:Ignorable="d"
-        Title="BookingRequestsWindow" Height="450" Width="800">
-    <Grid>
-        
+        d:DataContext="{d:DesignInstance Type=viewmodel:BookingRequestsViewModel}">
+    <Window.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        <Style x:Key="ValidationTextBoxStyle" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="Background" Value="LightCoral"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
+            <Button Content="&lt;&lt;"
+              Command="{Binding FirstBookingRequestCommand}" Width="50" Margin="5"/>
+            <Button Content="&lt;"
+              Command="{Binding PreviousBookingRequestCommand}" Width="50" Margin="5"/>
+            <TextBlock Text="{Binding CurrentBookingRequest.BookingRequestId}" 
+                 VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <Button Content=">"
+              Command="{Binding NextBookingRequestCommand}" Width="50" Margin="5"/>
+            <Button Content=">>"
+              Command="{Binding LastBookingRequestCommand}" Width="50" Margin="5"/>
+            <Separator Width="1" Height="30" Margin="10,0"/>
+            <Button Content="Добавить" Command="{Binding AddBookingRequestCommand }" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
+            <Button Content="Сохранить" Command="{Binding SaveBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="90" Margin="5"/>
+                <Button Content="Удалить" Command="{Binding DeleteBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="ID заявки:" Margin="5" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentBookingRequest.BookingRequestId}" Margin="5" IsReadOnly="True"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="ID сотрудника:" Margin="5" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="1" Grid.Column="1" 
+               Text="{Binding CurrentBookingRequest.EmployeeId, UpdateSourceTrigger=PropertyChanged}" 
+               Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="ID рабочего места:" Margin="5" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="2" Grid.Column="1" 
+               Text="{Binding CurrentBookingRequest.WorkplaceId, UpdateSourceTrigger=PropertyChanged}" 
+               Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="ID клиента:" Margin="5" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="3" Grid.Column="1" 
+               Text="{Binding CurrentBookingRequest.ClientId, UpdateSourceTrigger=PropertyChanged}" 
+               Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Начало:" Margin="5" VerticalAlignment="Center"/>
+            <DatePicker Grid.Row="4" Grid.Column="1" 
+                  SelectedDate="{Binding CurrentBookingRequest.StartTime, UpdateSourceTrigger=PropertyChanged}" 
+                  Margin="5"/>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Окончание:" Margin="5" VerticalAlignment="Center"/>
+            <DatePicker Grid.Row="5" Grid.Column="1" 
+                  SelectedDate="{Binding CurrentBookingRequest.EndTime, UpdateSourceTrigger=PropertyChanged}" 
+                  Margin="5"/>
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Статус заявки:" Margin="5" VerticalAlignment="Center"/>
+            <ComboBox Grid.Row="6" Grid.Column="1"
+                SelectedValue="{Binding CurrentBookingRequest.RequestStatus, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="Content" Margin="5">
+                <ComboBoxItem Content="Создана"/>
+                <ComboBoxItem Content="Завершена"/>
+                <ComboBoxItem Content="Отменена"/>
+            </ComboBox>
+        </Grid>
     </Grid>
 </Window>

@@ -54,18 +54,24 @@ namespace ControlOfComputerClub.View
         private void HandleOpenBookingRequestsWindowMessage(object recipient, OpenBookingRequestsWindowMessage message)
         {
             BookingRequestsWindow bookingRequestsWindow = new BookingRequestsWindow();
+            BookingRequestsViewModel bookingRequestsViewModel = new BookingRequestsViewModel();
+            bookingRequestsWindow.DataContext = bookingRequestsViewModel;
             bookingRequestsWindow.Show();
         }
 
         private void HandleOpenEmployeesWindowMessage(object recipient, OpenEmployeesWindowMessage message)
         {
             EmployeesWindow employeesWindow = new EmployeesWindow();
+            EmployeesViewModel employeesViewModel = new EmployeesViewModel();
+            employeesWindow.DataContext = employeesViewModel;
             employeesWindow.Show();
         }
 
         private void HandleOpenWorkplacesWindowMessage(object recipient, OpenWorkplacesWindowMessage message)
         {
             WorkplacesWindow workplacesWindow = new WorkplacesWindow();
+            WorkplacesViewModel workplacesViewModel = new WorkplacesViewModel();
+            workplacesWindow.DataContext = workplacesViewModel;
             workplacesWindow.Show();
         }
     }
