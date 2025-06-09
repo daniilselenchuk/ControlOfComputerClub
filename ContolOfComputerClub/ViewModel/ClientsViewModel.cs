@@ -7,6 +7,8 @@ using ControlOfComputerClub.Model;
 
 public partial class ClientsViewModel : ObservableObject
 {
+    private Client? _originalClientCopy;
+
     /// <summary>
     /// Показывает текущего выбранного клиента.
     /// </summary>
@@ -19,11 +21,9 @@ public partial class ClientsViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<Client> _clients = new();
 
-    public ClientsViewModel()
+    public ClientsViewModel() 
     {
         LoadClients();
-        if (Clients.Count > 0)
-            CurrentClient = Clients[0];
     }
 
     [RelayCommand]
@@ -64,6 +64,7 @@ public partial class ClientsViewModel : ObservableObject
     private void NextClient()
     {
         if (CurrentClient == null || Clients.Count == 0) return;
+        CancelChanges();
         int index = Clients.IndexOf(CurrentClient);
         if (index < Clients.Count - 1)
             CurrentClient = Clients[index + 1];
@@ -73,6 +74,7 @@ public partial class ClientsViewModel : ObservableObject
     private void PreviousClient()
     {
         if (CurrentClient == null || Clients.Count == 0) return;
+        CancelChanges();
         int index = Clients.IndexOf(CurrentClient);
         if (index > 0)
             CurrentClient = Clients[index - 1];
@@ -113,6 +115,30 @@ public partial class ClientsViewModel : ObservableObject
                 Clients.Remove(CurrentClient);
                 CurrentClient = Clients.Count > 0 ? Clients[0] : null;
             }
+        }
+    }
+
+    partial void OnCurrentClientChanged(Client? oldValue, Client? newValue)
+    {
+        if (newValue != null)
+        {
+            _originalClientCopy = new Client
+            {
+                ClientId = newValue.ClientId,
+                PhoneNumber = newValue.PhoneNumber,
+                Name = newValue.Name,
+                AmountSpent = newValue.AmountSpent
+            };
+        }
+    }
+
+    private void CancelChanges()
+    {
+        if (_originalClientCopy != null && CurrentClient != null)
+        {
+            CurrentClient.PhoneNumber = _originalClientCopy.PhoneNumber;
+            CurrentClient.Name = _originalClientCopy.Name;
+            CurrentClient.AmountSpent = _originalClientCopy.AmountSpent;
         }
     }
 }
