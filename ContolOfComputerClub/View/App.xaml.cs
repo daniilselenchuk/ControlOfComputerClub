@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.ViewModel;
 using ControlOfComputerClub.ViewModel.Messages;
-using ControlOfComputerClub.View;
 
 namespace ControlOfComputerClub.View
 {

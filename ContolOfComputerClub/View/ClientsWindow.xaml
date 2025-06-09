@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ControlOfComputerClub.View"
+        xmlns:converters="clr-namespace:ControlOfComputerClub.View.Converters"
         Title="Клиенты" Height="450" Width="800"
         Icon="resources\ContactsApp_96x96.ico"
         xmlns:viewmodel="clr-namespace:ControlOfComputerClub.ViewModel;assembly=ViewModel" 
         d:DataContext="{d:DesignInstance Type=viewmodel:ClientsViewModel}"
         mc:Ignorable="d">
     <Window.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <Style x:Key="ValidationTextBoxStyle" TargetType="TextBox">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
@@ -34,9 +36,9 @@
 
             <Separator Margin="10,0" Width="1" Height="30"/>
 
-            <Button Content="Добавить" Command="{Binding AddClientCommand}" Width="80" Margin="5"/>
-            <Button Content="Сохранить" Command="{Binding SaveClientCommand}" Width="90" Margin="5"/>
-            <Button Content="Удалить" Command="{Binding DeleteClientCommand}" Width="80" Margin="5"/>
+            <Button Content="Добавить" Command="{Binding AddClientCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
+            <Button Content="Сохранить" Command="{Binding SaveClientCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="90" Margin="5"/>
+            <Button Content="Удалить" Command="{Binding DeleteClientCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
         </StackPanel>
 
         <Grid Grid.Row="1">

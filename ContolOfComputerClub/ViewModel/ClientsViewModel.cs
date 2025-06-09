@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -22,6 +23,8 @@ namespace ControlOfComputerClub.ViewModel
         /// </summary>
         [ObservableProperty]
         private ObservableCollection<Client> _clients = new();
+
+        public bool HasErrors => CurrentClient?.HasErrors ?? false;
 
         public ClientsViewModel()
         {
@@ -85,6 +88,7 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void FirstClient()
         {
+            CancelChanges();
             if (Clients.Count > 0)
                 CurrentClient = Clients[0];
         }
@@ -92,6 +96,7 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void LastClient()
         {
+            CancelChanges();
             if (Clients.Count > 0)
                 CurrentClient = Clients[Clients.Count - 1];
         }
@@ -101,6 +106,7 @@ namespace ControlOfComputerClub.ViewModel
         {
             Client newClient = new Client();
             CurrentClient = newClient;
+            CurrentClient.Validate();
         }
 
         [RelayCommand]
@@ -122,6 +128,10 @@ namespace ControlOfComputerClub.ViewModel
 
         partial void OnCurrentClientChanged(Client? oldValue, Client? newValue)
         {
+            if (oldValue != null)
+            {
+                oldValue.ErrorsChanged -= OnErrorsChanged;
+            }
             if (newValue != null)
             {
                 _originalClientCopy = new Client
@@ -131,8 +141,16 @@ namespace ControlOfComputerClub.ViewModel
                     Name = newValue.Name,
                     AmountSpent = newValue.AmountSpent
                 };
+                newValue.ErrorsChanged += OnErrorsChanged;
             }
+            OnPropertyChanged(nameof(HasErrors));
         }
+
+        private void OnErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(HasErrors));
+        }
+
 
         private void CancelChanges()
         {

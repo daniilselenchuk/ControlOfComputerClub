@@ -37,5 +37,9 @@ namespace ControlOfComputerClub.Model
 
         public decimal Discount { get; }
 
+        public void Validate()
+        {
+            ValidateAllProperties();
+        }
     }
 }
