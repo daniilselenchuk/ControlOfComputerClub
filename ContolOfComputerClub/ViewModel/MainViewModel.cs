@@ -66,13 +66,5 @@ namespace ControlOfComputerClub.ViewModel
                 Employees = new ObservableCollection<Employee>(db.Employees.ToList());
             }
         }
-
-        private void LoadBookingRequests()
-        {
-            using (var db = new ApplicationDbContext())
-            {
-                BookingRequests = new ObservableCollection<BookingRequest>(db.BookingRequests.ToList());
-            }
-        }
     }
 }

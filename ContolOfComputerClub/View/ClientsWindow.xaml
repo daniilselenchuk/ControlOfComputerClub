@@ -3,10 +3,65 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:View"
         mc:Ignorable="d"
         Title="ClientsWindow" Height="450" Width="800">
-    <Grid>
-        
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Навигационная панель -->
+            <RowDefinition Height="*"/>
+            <!-- Форма редактирования -->
+        </Grid.RowDefinitions>
+
+        <!-- Панель переключения -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
+            <Button Content="&lt;&lt;" Command="{Binding FirstClientCommand}" Width="50" Margin="5"/>
+            <Button Content="&lt;" Command="{Binding PreviousClientCommand}" Width="50" Margin="5"/>
+            <TextBlock Text="{Binding CurrentClient.ClientId}" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <Button Content="&gt;" Command="{Binding NextClientCommand}" Width="50" Margin="5"/>
+            <Button Content="&gt;&gt;" Command="{Binding LastClientCommand}" Width="50" Margin="5"/>
+
+            <Separator Margin="10,0" Width="1" Height="30"/>
+
+            <Button Content="Добавить" Command="{Binding AddClientCommand}" Width="80" Margin="5"/>
+            <Button Content="Сохранить" Command="{Binding SaveClientCommand}" Width="90" Margin="5"/>
+            <Button Content="Удалить" Command="{Binding DeleteClientCommand}" Width="80" Margin="5"/>
+        </StackPanel>
+
+        <!-- Форма редактирования клиента -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- ID -->
+                <RowDefinition Height="Auto"/>
+                <!-- ФИО -->
+                <RowDefinition Height="Auto"/>
+                <!-- Телефон -->
+                <RowDefinition Height="Auto"/>
+                <!-- Email -->
+                <RowDefinition Height="Auto"/>
+                <!-- Дата регистрации -->
+                <RowDefinition Height="*"/>
+                <!-- Кнопки -->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="ID клиента:" Margin="5" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentClient.ClientId}" 
+                     Margin="5" IsReadOnly="True"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="ФИО:" Margin="5" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentClient.Name, 
+                UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Телефон:" Margin="5" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentClient.PhoneNumber, 
+                UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+        </Grid>
     </Grid>
 </Window>
