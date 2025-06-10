@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:ControlOfComputerClub.View.Converters"
         xmlns:viewmodel="clr-namespace:ControlOfComputerClub.ViewModel;assembly=ViewModel"
+        Icon="resources\ContactsApp_96x96.ico"
         Title="Заявки на бронирование" Height="500" Width="800"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodel:BookingRequestsViewModel}">

@@ -45,34 +45,49 @@ namespace ControlOfComputerClub.View
 
         private void HandleOpenClientsWindowMessage(object recipient, OpenClientsWindowMessage message)
         {
-            ClientsWindow clientsWindow = new ClientsWindow();
-            ClientsViewModel clientsViewModel = new ClientsViewModel();
-            clientsWindow.DataContext = clientsViewModel;
+            ClientsWindow clientsWindow = ClientsWindow.GetInstance();
+            if (clientsWindow.DataContext == null)
+            {
+                ClientsViewModel clientsViewModel = new ClientsViewModel();
+                clientsWindow.DataContext = clientsViewModel;
+            }
             clientsWindow.Show();
+            clientsWindow.Activate();
         }
 
         private void HandleOpenBookingRequestsWindowMessage(object recipient, OpenBookingRequestsWindowMessage message)
         {
-            BookingRequestsWindow bookingRequestsWindow = new BookingRequestsWindow();
-            BookingRequestsViewModel bookingRequestsViewModel = new BookingRequestsViewModel();
-            bookingRequestsWindow.DataContext = bookingRequestsViewModel;
+            BookingRequestsWindow bookingRequestsWindow = BookingRequestsWindow.GetInstance();
+            if (bookingRequestsWindow.DataContext == null)
+            {
+                BookingRequestsViewModel bookingRequestsViewModel = new BookingRequestsViewModel();
+                bookingRequestsWindow.DataContext = bookingRequestsViewModel;
+            }
             bookingRequestsWindow.Show();
+            bookingRequestsWindow.Activate();
         }
 
         private void HandleOpenEmployeesWindowMessage(object recipient, OpenEmployeesWindowMessage message)
         {
-            EmployeesWindow employeesWindow = new EmployeesWindow();
-            EmployeesViewModel employeesViewModel = new EmployeesViewModel();
-            employeesWindow.DataContext = employeesViewModel;
+            EmployeesWindow employeesWindow = EmployeesWindow.GetInstance();
+            if (employeesWindow.DataContext == null)
+            {
+                EmployeesViewModel employeesViewModel = new EmployeesViewModel();
+                employeesWindow.DataContext = employeesViewModel;
+            }
             employeesWindow.Show();
+            employeesWindow.Activate();
         }
-
         private void HandleOpenWorkplacesWindowMessage(object recipient, OpenWorkplacesWindowMessage message)
         {
-            WorkplacesWindow workplacesWindow = new WorkplacesWindow();
-            WorkplacesViewModel workplacesViewModel = new WorkplacesViewModel();
-            workplacesWindow.DataContext = workplacesViewModel;
+            WorkplacesWindow workplacesWindow = WorkplacesWindow.GetInstance();
+            if (workplacesWindow.DataContext == null)
+            {
+                WorkplacesViewModel workplacesViewModel = new WorkplacesViewModel();
+                workplacesWindow.DataContext = workplacesViewModel;
+            }
             workplacesWindow.Show();
+            workplacesWindow.Activate();
         }
     }
 

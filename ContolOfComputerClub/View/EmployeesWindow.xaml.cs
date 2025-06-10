@@ -12,9 +12,29 @@ namespace ControlOfComputerClub.View
     /// </summary>
     public partial class EmployeesWindow : Window
     {
-        public EmployeesWindow()
+        private static EmployeesWindow? _instance;
+
+        private EmployeesWindow()
         {
             InitializeComponent();
+            this.Left = Properties.Settings.Default.WindowLeft;
+            this.Top = Properties.Settings.Default.WindowTop;
+        }
+
+        public static EmployeesWindow GetInstance()
+        {
+            if (_instance == null)
+                _instance = new EmployeesWindow();
+            return _instance;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            Properties.Settings.Default.WindowLeft = this.Left;
+            Properties.Settings.Default.WindowTop = this.Top;
+            Properties.Settings.Default.Save();
+            base.OnClosed(e);
+            _instance = null;
         }
     }
 }
