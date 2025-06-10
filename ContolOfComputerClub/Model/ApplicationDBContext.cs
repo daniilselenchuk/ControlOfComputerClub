@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace ControlOfComputerClub.Model
 {
@@ -10,11 +10,35 @@ namespace ControlOfComputerClub.Model
         public DbSet<Client> Clients { get; set; }
         public DbSet<BookingRequest> BookingRequests { get; set; }
         public DbSet<Workplace> Workplaces { get; set; }
+        public DbSet<V_ClientAmountSpent> V_ClientAmountSpent { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<V_ClientAmountSpent>()
+                .HasNoKey()
+                .ToView("v_ClientAmountSpent");
+
+            modelBuilder.Entity<BookingRequest>()
+                .ToTable("BookingRequests", tb => tb.HasTrigger("trg_UpdateAmountSpent"));
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer("Server=FNDK_LAPTOP;Database=CyberClubDB;Trusted_Connection=True;" +
-                "TrustServerCertificate=True;");
+            if (!options.IsConfigured)
+            {
+                var config = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false)
+                    .Build();
+
+                var conn = config.GetConnectionString("CyberClubDb");
+                if (string.IsNullOrWhiteSpace(conn))
+                    throw new InvalidOperationException("Не найден CyberClubDb в appsettings.json");
+
+                options.UseSqlServer(conn);
+            }
         }
     }
 }

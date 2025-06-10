@@ -34,36 +34,51 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void LoadClients()
         {
-            using (var db = new ApplicationDbContext())
-            {
-                Clients = new ObservableCollection<Client>(db.Clients.ToList());
-            }
-            if (Clients.Count > 0)
-                CurrentClient = Clients[0];
+            using var db = new ApplicationDbContext();
+
+            var list = db.Clients
+                .Select(c => new Client
+                {
+                    ClientId = c.ClientId,
+                    Name = c.Name,
+                    PhoneNumber = c.PhoneNumber,
+                    // FirstOrDefault() вернёт 0m, если нет записи
+                    AmountSpent = db.V_ClientAmountSpent
+                                    .Where(v => v.ClientId == c.ClientId)
+                                    .Select(v => v.AmountSpent)
+                                    .FirstOrDefault()
+                })
+                .ToList();
+
+            Clients = new ObservableCollection<Client>(list);
+            CurrentClient = Clients.FirstOrDefault();
         }
+
+
 
         [RelayCommand]
         private void SaveClient()
         {
             if (CurrentClient == null) return;
 
-            using (var db = new ApplicationDbContext())
+            using var db = new ApplicationDbContext();
+            var existing = db.Clients.FirstOrDefault(c => c.ClientId == CurrentClient!.ClientId);
+
+            if (existing != null)
             {
-                var existingClient = db.Clients.FirstOrDefault(c => c.ClientId == CurrentClient.ClientId);
-                if (existingClient != null)
-                {
-                    existingClient.PhoneNumber = CurrentClient.PhoneNumber;
-                    existingClient.Name = CurrentClient.Name;
-                    existingClient.AmountSpent = CurrentClient.AmountSpent;
-                }
-                else
-                {
-                    db.Clients.Add(CurrentClient);
-                }
-                db.SaveChanges();
-                LoadClients();
+                existing.Name = CurrentClient.Name;
+                existing.PhoneNumber = CurrentClient.PhoneNumber;
+                // НЕ ТРОГАЕМ existing.AmountSpent — он пересчитается триггером на стороне БД
             }
+            else
+            {
+                db.Clients.Add(CurrentClient);
+            }
+
+            db.SaveChanges();
+            LoadClients();
         }
+
 
         [RelayCommand]
         private void NextClient()

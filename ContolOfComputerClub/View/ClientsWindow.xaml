@@ -71,6 +71,11 @@
                      Text="{Binding CurrentClient.PhoneNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
                      Margin="5" 
                      Style="{StaticResource ValidationTextBoxStyle}"/>
+
+            <TextBox Grid.Row="3" Grid.Column="1" 
+                     Text="{Binding CurrentClient.AmountSpent, UpdateSourceTrigger=PropertyChanged}" 
+                     Margin="5"
+                     IsReadOnly="True"/>
         </Grid>
     </Grid>
 </Window>
