@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.ViewModel;
 using ControlOfComputerClub.ViewModel.Messages;
+using System.IO;
 
 namespace ControlOfComputerClub.View
 {
@@ -27,6 +28,7 @@ namespace ControlOfComputerClub.View
             WeakReferenceMessenger.Default.Register<OpenBookingRequestsWindowMessage>(this, HandleOpenBookingRequestsWindowMessage);
             WeakReferenceMessenger.Default.Register<OpenEmployeesWindowMessage>(this, HandleOpenEmployeesWindowMessage);
             WeakReferenceMessenger.Default.Register<OpenWorkplacesWindowMessage>(this, HandleOpenWorkplacesWindowMessage);
+            WeakReferenceMessenger.Default.Register<OpenFileDialogMessage>(this, HandleOpenFileDialogMessage);
         }
 
         private void HandleExitMessage(object recipient, ExitMessage message)
@@ -89,6 +91,27 @@ namespace ControlOfComputerClub.View
             workplacesWindow.Show();
             workplacesWindow.Activate();
         }
+        private void HandleOpenFileDialogMessage(object recipient, OpenFileDialogMessage message)
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp|All Files|*.*"
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                try
+                {
+                    byte[] imageBytes = File.ReadAllBytes(dlg.FileName);
+                    WeakReferenceMessenger.Default.Send(new FileSelectedMessage(imageBytes));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка загрузки изображения: {ex.Message}");
+                }
+            }
+        }
+
     }
 
 }

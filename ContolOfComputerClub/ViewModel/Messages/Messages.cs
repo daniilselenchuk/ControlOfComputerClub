@@ -1,4 +1,6 @@
-﻿namespace ControlOfComputerClub.ViewModel.Messages
+﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+
+namespace ControlOfComputerClub.ViewModel.Messages
 {
     /// <summary>
     /// Сообщение для выхода из приложения.
@@ -29,4 +31,17 @@
     /// Сообщение для открытия окна заявок на бронирование.
     /// </summary>
     public class  OpenBookingRequestsWindowMessage { }
+
+    /// <summary>
+    /// Сообщение для открытия окна для добавления фото.
+    /// </summary>
+    public class OpenFileDialogMessage { }
+
+    /// <summary>
+    /// Сообщение, которое отправляется при выборе файла.
+    /// </summary>
+    public class FileSelectedMessage : ValueChangedMessage<byte[]>
+    {
+        public FileSelectedMessage(byte[] imageData) : base(imageData) { }
+    }
 }

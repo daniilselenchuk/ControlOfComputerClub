@@ -83,9 +83,11 @@
             <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentEmployee.NumberPassport, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
                      Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
 
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="Фото:" Margin="5" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Фото:" Margin="5" VerticalAlignment="Center"/>
             <Image Grid.Row="5" Grid.Column="1" Margin="5" 
                    Source="{Binding CurrentEmployee.Photo, Converter={StaticResource ByteArrayToImageConverter}}"/>
+            <Border Grid.Row="7" Grid.Column="5" Margin="5" BorderThickness="1" BorderBrush="Gray"/>
+            <Button Grid.Column="0" Grid.Row="6" Content="Загрузить фото" Command="{Binding LoadEmployeePhotoCommand}" Width="120" Height="30"/>
         </Grid>
     </Grid>
 </Window>

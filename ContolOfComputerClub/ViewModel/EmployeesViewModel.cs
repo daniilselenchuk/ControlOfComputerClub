@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.Model;
+using ControlOfComputerClub.ViewModel.Messages;
 
 namespace ControlOfComputerClub.ViewModel
 {
@@ -29,6 +31,14 @@ namespace ControlOfComputerClub.ViewModel
         public EmployeesViewModel()
         {
             LoadEmployees();
+            WeakReferenceMessenger.Default.Register<FileSelectedMessage>(this, (_, message) =>
+            {
+                if (CurrentEmployee != null)
+                {
+                    CurrentEmployee.Photo = message.Value;
+                }
+            });
+
         }
 
         [RelayCommand]
@@ -128,6 +138,13 @@ namespace ControlOfComputerClub.ViewModel
             }
         }
 
+        [RelayCommand]
+        private void LoadEmployeePhoto()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenFileDialogMessage());
+        }
+
+
         partial void OnCurrentEmployeeChanged(Employee? oldValue, Employee? newValue)
         {
             if (oldValue != null)
@@ -136,7 +153,6 @@ namespace ControlOfComputerClub.ViewModel
             }
             if (newValue != null)
             {
-                // Создаём копию для возможности отката изменений
                 _originalEmployeeCopy = new Employee
                 {
                     EmployeeId = newValue.EmployeeId,
