@@ -42,17 +42,21 @@ namespace ControlOfComputerClub.ViewModel
                     ClientId = c.ClientId,
                     Name = c.Name,
                     PhoneNumber = c.PhoneNumber,
-                    // FirstOrDefault() вернёт 0m, если нет записи
                     AmountSpent = db.V_ClientAmountSpent
                                     .Where(v => v.ClientId == c.ClientId)
                                     .Select(v => v.AmountSpent)
-                                    .FirstOrDefault()
+                                    .FirstOrDefault(),
+                    Discount = db.Clients
+                                 .Where(x => x.ClientId == c.ClientId)
+                                 .Select(x => x.Discount)
+                                 .FirstOrDefault()
                 })
                 .ToList();
 
             Clients = new ObservableCollection<Client>(list);
             CurrentClient = Clients.FirstOrDefault();
         }
+
 
 
 

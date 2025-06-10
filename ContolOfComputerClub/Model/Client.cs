@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ControlOfComputerClub.Model
 {
@@ -12,6 +13,8 @@ namespace ControlOfComputerClub.Model
         private string _name = string.Empty;
 
         private decimal _amountSpent;
+
+        private decimal _discount;
 
         [Required(ErrorMessage = "Телефон обязателен")]
         [RegularExpression(@"^\d{11}$", ErrorMessage = "Номер телефона должен содержать ровно 11 цифр")]
@@ -35,7 +38,12 @@ namespace ControlOfComputerClub.Model
             set => SetProperty(ref _amountSpent, value, true);
         }
 
-        public decimal Discount { get; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public decimal Discount
+        {
+            get => _discount;
+            set => SetProperty(ref _discount, value, false);
+        }
 
         public void Validate()
         {

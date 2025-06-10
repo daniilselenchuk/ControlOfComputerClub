@@ -6,10 +6,12 @@
         xmlns:converters="clr-namespace:ControlOfComputerClub.View.Converters"
         xmlns:viewmodel="clr-namespace:ControlOfComputerClub.ViewModel;assembly=ViewModel"
         Icon="resources\ContactsApp_96x96.ico"
-        Title="Заявки на бронирование" Height="500" Width="800"
+        Title="Заявки на бронирование" Height="600" Width="800"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodel:BookingRequestsViewModel}">
+
     <Window.Resources>
+        <viewmodel:ClientsViewModel x:Key="ClientsViewModel"/>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <Style x:Key="ValidationTextBoxStyle" TargetType="TextBox">
             <Style.Triggers>
@@ -19,29 +21,28 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- Панель управления -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
-            <Button Content="&lt;&lt;"
-              Command="{Binding FirstBookingRequestCommand}" Width="50" Margin="5"/>
-            <Button Content="&lt;"
-              Command="{Binding PreviousBookingRequestCommand}" Width="50" Margin="5"/>
-            <TextBlock Text="{Binding CurrentBookingRequest.BookingRequestId}" 
-                 VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
-            <Button Content=">"
-              Command="{Binding NextBookingRequestCommand}" Width="50" Margin="5"/>
-            <Button Content=">>"
-              Command="{Binding LastBookingRequestCommand}" Width="50" Margin="5"/>
+            <Button Content="&lt;&lt;" Command="{Binding FirstBookingRequestCommand}" Width="50" Margin="5"/>
+            <Button Content="&lt;" Command="{Binding PreviousBookingRequestCommand}" Width="50" Margin="5"/>
+            <TextBlock Text="{Binding CurrentBookingRequest.BookingRequestId}" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <Button Content="&gt;" Command="{Binding NextBookingRequestCommand}" Width="50" Margin="5"/>
+            <Button Content="&gt;&gt;" Command="{Binding LastBookingRequestCommand}" Width="50" Margin="5"/>
             <Separator Width="1" Height="30" Margin="10,0"/>
-            <Button Content="Добавить" Command="{Binding AddBookingRequestCommand }" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
+            <Button Content="Добавить" Command="{Binding AddBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
             <Button Content="Сохранить" Command="{Binding SaveBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="90" Margin="5"/>
-                <Button Content="Удалить" Command="{Binding DeleteBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
+            <Button Content="Удалить" Command="{Binding DeleteBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
         </StackPanel>
 
+        <!-- Форма заявки -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -51,7 +52,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -62,38 +62,45 @@
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentBookingRequest.BookingRequestId}" Margin="5" IsReadOnly="True"/>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="ID сотрудника:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="1" Grid.Column="1" 
-               Text="{Binding CurrentBookingRequest.EmployeeId, UpdateSourceTrigger=PropertyChanged}" 
-               Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentBookingRequest.EmployeeId, UpdateSourceTrigger=PropertyChanged}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
 
             <TextBlock Grid.Row="2" Grid.Column="0" Text="ID рабочего места:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="2" Grid.Column="1" 
-               Text="{Binding CurrentBookingRequest.WorkplaceId, UpdateSourceTrigger=PropertyChanged}" 
-               Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentBookingRequest.WorkplaceId, UpdateSourceTrigger=PropertyChanged}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
 
             <TextBlock Grid.Row="3" Grid.Column="0" Text="ID клиента:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="3" Grid.Column="1" 
-               Text="{Binding CurrentBookingRequest.ClientId, UpdateSourceTrigger=PropertyChanged}" 
-               Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentBookingRequest.ClientId, UpdateSourceTrigger=PropertyChanged}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
 
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Начало:" Margin="5" VerticalAlignment="Center"/>
-            <DatePicker Grid.Row="4" Grid.Column="1" 
-                  SelectedDate="{Binding CurrentBookingRequest.StartTime, UpdateSourceTrigger=PropertyChanged}" 
-                  Margin="5"/>
+            <DatePicker Grid.Row="4" Grid.Column="1" SelectedDate="{Binding CurrentBookingRequest.StartTime, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
 
             <TextBlock Grid.Row="5" Grid.Column="0" Text="Окончание:" Margin="5" VerticalAlignment="Center"/>
-            <DatePicker Grid.Row="5" Grid.Column="1" 
-                  SelectedDate="{Binding CurrentBookingRequest.EndTime, UpdateSourceTrigger=PropertyChanged}" 
-                  Margin="5"/>
+            <DatePicker Grid.Row="5" Grid.Column="1" SelectedDate="{Binding CurrentBookingRequest.EndTime, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
 
             <TextBlock Grid.Row="6" Grid.Column="0" Text="Статус заявки:" Margin="5" VerticalAlignment="Center"/>
             <ComboBox Grid.Row="6" Grid.Column="1"
-                SelectedValue="{Binding CurrentBookingRequest.RequestStatus, UpdateSourceTrigger=PropertyChanged}"
-                SelectedValuePath="Content" Margin="5">
+                      SelectedValue="{Binding CurrentBookingRequest.RequestStatus, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedValuePath="Content" Margin="5">
                 <ComboBoxItem Content="Создана"/>
                 <ComboBoxItem Content="Завершена"/>
                 <ComboBoxItem Content="Отменена"/>
             </ComboBox>
         </Grid>
+
+        <!-- Таблица клиентов -->
+        <DataGrid x:Name="ClientsGrid" Grid.Row="2"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  ItemsSource="{Binding Clients, Source={StaticResource ClientsViewModel}}"
+                  Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ClientId}" Width="*"/>
+                <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="2*"/>
+                <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}" Width="3*"/>
+                <DataGridTextColumn Header="Потрачено" Binding="{Binding AmountSpent}" Width="2*"/>
+                <DataGridTextColumn Header="Скидка" Binding="{Binding Discount}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

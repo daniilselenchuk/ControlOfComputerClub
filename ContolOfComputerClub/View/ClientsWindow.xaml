@@ -71,9 +71,16 @@
                      Text="{Binding CurrentClient.PhoneNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
                      Margin="5" 
                      Style="{StaticResource ValidationTextBoxStyle}"/>
-
+            
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Потрачено:" Margin="5" VerticalAlignment="Center"/>
             <TextBox Grid.Row="3" Grid.Column="1" 
                      Text="{Binding CurrentClient.AmountSpent, UpdateSourceTrigger=PropertyChanged}" 
+                     Margin="5"
+                     IsReadOnly="True"/>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Скидка:" Margin="5" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="4" Grid.Column="1" 
+                     Text="{Binding CurrentClient.Discount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" 
                      Margin="5"
                      IsReadOnly="True"/>
         </Grid>

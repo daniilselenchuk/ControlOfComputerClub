@@ -22,6 +22,7 @@ namespace ControlOfComputerClub.Model
 
             modelBuilder.Entity<BookingRequest>()
                 .ToTable("BookingRequests", tb => tb.HasTrigger("trg_UpdateAmountSpent"));
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
