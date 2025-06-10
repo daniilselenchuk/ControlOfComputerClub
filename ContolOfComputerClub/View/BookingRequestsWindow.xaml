@@ -12,6 +12,7 @@
 
     <Window.Resources>
         <viewmodel:ClientsViewModel x:Key="ClientsViewModel"/>
+        <viewmodel:WorkplacesViewModel x:Key="WorkplacesViewModel"/>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <Style x:Key="ValidationTextBoxStyle" TargetType="TextBox">
             <Style.Triggers>
@@ -24,6 +25,7 @@
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -100,6 +102,20 @@
                 <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}" Width="3*"/>
                 <DataGridTextColumn Header="Потрачено" Binding="{Binding AmountSpent}" Width="2*"/>
                 <DataGridTextColumn Header="Скидка" Binding="{Binding Discount}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid x:Name="WorkplacesGrid" Grid.Row="3"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          ItemsSource="{Binding Workplaces, Source={StaticResource WorkplacesViewModel}}"
+          Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding WorkplaceId}" Width="*"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="2*"/>
+                <DataGridTextColumn Header="Тариф" Binding="{Binding Tariff}" Width="2*"/>
+                <DataGridTextColumn Header="Конфигурация" Binding="{Binding Configuration}" Width="2*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
