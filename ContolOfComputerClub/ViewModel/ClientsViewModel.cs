@@ -74,7 +74,7 @@ private void LoadClients()
             {
                 existing.Name = CurrentClient.Name;
                 existing.PhoneNumber = CurrentClient.PhoneNumber;
-                // НЕ ТРОГАЕМ existing.AmountSpent — он пересчитается триггером на стороне БД
+                // НЕ ТРОГАТЬ existing.AmountSpent — он пересчитается триггером на стороне БД
             }
             else
             {

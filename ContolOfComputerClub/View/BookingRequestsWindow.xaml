@@ -11,6 +11,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodel:BookingRequestsViewModel}">
 
     <Window.Resources>
+        <converters:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
         <viewmodel:ClientsViewModel x:Key="ClientsViewModel"/>
         <viewmodel:WorkplacesViewModel x:Key="WorkplacesViewModel"/>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
@@ -31,7 +32,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Панель управления -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
             <Button Content="&lt;&lt;" Command="{Binding FirstBookingRequestCommand}" Width="50" Margin="5"/>
             <Button Content="&lt;" Command="{Binding PreviousBookingRequestCommand}" Width="50" Margin="5"/>
@@ -44,7 +44,6 @@
             <Button Content="Удалить" Command="{Binding DeleteBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
         </StackPanel>
 
-        <!-- Форма заявки -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -88,7 +87,6 @@
             </ComboBox>
         </Grid>
 
-        <!-- Таблица клиентов -->
         <DataGrid x:Name="ClientsGrid" Grid.Row="2"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
@@ -113,7 +111,7 @@
           Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding WorkplaceId}" Width="*"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="2*"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status, Converter={StaticResource BoolToStatusConverter}}" Width="2*"/>
                 <DataGridTextColumn Header="Тариф" Binding="{Binding Tariff}" Width="2*"/>
                 <DataGridTextColumn Header="Конфигурация" Binding="{Binding Configuration}" Width="2*"/>
             </DataGrid.Columns>

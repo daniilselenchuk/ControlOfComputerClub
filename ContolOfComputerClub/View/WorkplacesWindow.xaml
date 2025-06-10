@@ -12,6 +12,7 @@
         mc:Ignorable="d">
 
     <Window.Resources>
+        <converters:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <Style x:Key="ValidationTextBoxStyle" TargetType="TextBox">
             <Style.Triggers>
@@ -21,7 +22,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Стиль выделенной строки в таблице -->
         <Style TargetType="DataGridRow">
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="Black"/>
@@ -38,14 +38,10 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Панель управления -->
             <RowDefinition Height="Auto"/>
-            <!-- Форма рабочего места -->
             <RowDefinition Height="*"/>
-            <!-- Таблица рабочих мест -->
         </Grid.RowDefinitions>
 
-        <!-- Панель управления -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
             <Button Content="&lt;&lt;" Command="{Binding FirstWorkplaceCommand}" Width="50" Margin="5"/>
             <Button Content="&lt;" Command="{Binding PreviousWorkplaceCommand}" Width="50" Margin="5"/>
@@ -58,7 +54,6 @@
             <Button Content="Удалить" Command="{Binding DeleteWorkplaceCommand}" IsEnabled="{Binding HasErrors, Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
         </StackPanel>
 
-        <!-- Форма рабочего места -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -99,7 +94,7 @@
                   Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding WorkplaceId}" Width="*"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="2*"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status, Converter={StaticResource BoolToStatusConverter}}" Width="2*"/>
                 <DataGridTextColumn Header="Тариф" Binding="{Binding Tariff}" Width="2*"/>
                 <DataGridTextColumn Header="Цена" Binding="{Binding PriceOfWorkplace}" Width="2*"/>
                 <DataGridTextColumn Header="Конфигурация" Binding="{Binding Configuration}" Width="3*"/>

@@ -25,14 +25,10 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Панель управления -->
             <RowDefinition Height="Auto"/>
-            <!-- Форма клиента -->
             <RowDefinition Height="*"/>
-            <!-- Таблица клиентов -->
         </Grid.RowDefinitions>
 
-        <!-- Панель управления -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
             <Button Content="&lt;&lt;" Command="{Binding FirstClientCommand}" Width="50" Margin="5"/>
             <Button Content="&lt;" Command="{Binding PreviousClientCommand}" Width="50" Margin="5"/>
@@ -45,7 +41,6 @@
             <Button Content="Удалить" Command="{Binding DeleteClientCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
         </StackPanel>
 
-        <!-- Форма клиента -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

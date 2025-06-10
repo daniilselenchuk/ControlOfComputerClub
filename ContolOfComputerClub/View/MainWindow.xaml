@@ -25,7 +25,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Главное меню -->
         <Menu x:Name="Menu" Grid.Row="0">
             <MenuItem Header="Файл">
                 <MenuItem Header="Выход" Command="{Binding ExitCommand}" 
@@ -47,7 +46,6 @@
             </MenuItem>
         </Menu>
 
-        <!-- Таблица для отображения данных -->
         <DataGrid x:Name="EmployeesGrid" Grid.Row="1" 
                   AutoGenerateColumns="False" 
                   IsReadOnly="True"

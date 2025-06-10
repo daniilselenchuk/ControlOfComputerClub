@@ -130,7 +130,6 @@ namespace ControlOfComputerClub.ViewModel
         {
             BookingRequest newRequest = new BookingRequest();
             CurrentBookingRequest = newRequest;
-            // Можно вызвать CurrentBookingRequest.Validate(), если требуется
         }
 
         [RelayCommand]
@@ -152,7 +151,6 @@ namespace ControlOfComputerClub.ViewModel
             }
         }
 
-        // Отслеживаем изменения текущей заявки и создаём копию для возможности отката изменений
         partial void OnCurrentBookingRequestChanged(BookingRequest? oldValue, BookingRequest? newValue)
         {
             if (oldValue != null)
