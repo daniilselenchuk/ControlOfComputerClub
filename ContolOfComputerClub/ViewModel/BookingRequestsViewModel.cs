@@ -4,7 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.Model;
+using ControlOfComputerClub.ViewModel.Messages;
+using Microsoft.EntityFrameworkCore;
 
 namespace ControlOfComputerClub.ViewModel
 {
@@ -64,8 +67,23 @@ namespace ControlOfComputerClub.ViewModel
                 {
                     db.BookingRequests.Add(CurrentBookingRequest);
                 }
-                db.SaveChanges();
-                LoadBookingRequests();
+                try
+                {
+                    db.SaveChanges();
+                    LoadBookingRequests();
+                }
+                catch (DbUpdateException ex)
+                {
+                    WeakReferenceMessenger.Default.Send(new ErrorMessage("Ошибка базы данных", ex.InnerException?.Message ?? "Неизвестная ошибка"));
+                }
+                catch (FormatException ex)
+                {
+                    WeakReferenceMessenger.Default.Send(new ErrorMessage("Ошибка формата данных", ex.Message));
+                }
+                catch (Exception ex)
+                {
+                    WeakReferenceMessenger.Default.Send(new ErrorMessage("Неизвестная ошибка", ex.Message));
+                }
             }
         }
 

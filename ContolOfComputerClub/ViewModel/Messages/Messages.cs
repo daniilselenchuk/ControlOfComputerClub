@@ -44,4 +44,20 @@ namespace ControlOfComputerClub.ViewModel.Messages
     {
         public FileSelectedMessage(byte[] imageData) : base(imageData) { }
     }
+
+    /// <summary>
+    /// Сообщения об ошибке.
+    /// </summary>
+    public class ErrorMessage
+    {
+        public string Title { get; }
+        public string Message { get; }
+
+        public ErrorMessage(string title, string message)
+        {
+            Title = title;
+            Message = message;
+        }
+    }
+
 }

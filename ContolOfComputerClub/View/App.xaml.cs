@@ -18,8 +18,10 @@ namespace ControlOfComputerClub.View
             MainViewModel mainViewModel = new MainViewModel();
             mainWindow.DataContext = mainViewModel;
             ProcessMessages();
+            RegisterErrorHandler();
             mainWindow.Show();
         }
+
         private void ProcessMessages()
         {
             WeakReferenceMessenger.Default.Register<ExitMessage>(this, HandleExitMessage);
@@ -37,7 +39,7 @@ namespace ControlOfComputerClub.View
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes) Application.Current.Shutdown();
 
-        }
+            }
 
         private void HandleShowAboutMessage(object recipient, ShowAboutMessage message)
         {
@@ -80,6 +82,7 @@ namespace ControlOfComputerClub.View
             employeesWindow.Show();
             employeesWindow.Activate();
         }
+
         private void HandleOpenWorkplacesWindowMessage(object recipient, OpenWorkplacesWindowMessage message)
         {
             WorkplacesWindow workplacesWindow = WorkplacesWindow.GetInstance();
@@ -91,6 +94,7 @@ namespace ControlOfComputerClub.View
             workplacesWindow.Show();
             workplacesWindow.Activate();
         }
+
         private void HandleOpenFileDialogMessage(object recipient, OpenFileDialogMessage message)
         {
             var dlg = new Microsoft.Win32.OpenFileDialog
@@ -107,11 +111,19 @@ namespace ControlOfComputerClub.View
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка загрузки изображения: {ex.Message}");
+                    MessageBox.Show($"Ошибка загрузки изображения: {ex.Message}", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
-    }
+        private void RegisterErrorHandler()
+        {
+            WeakReferenceMessenger.Default.Register<ErrorMessage>(this, (recipient, message) =>
+            {
+                MessageBox.Show(message.Message, message.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            });
+        }
 
+    }
 }
