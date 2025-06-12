@@ -32,6 +32,15 @@ namespace ControlOfComputerClub.ViewModel
         public BookingRequestsViewModel()
         {
             LoadBookingRequests();
+            WeakReferenceMessenger.Default.Register<BookingRequest>(this, (r, newBookingRequest) =>
+            {
+                using var db = new ApplicationDbContext();
+                db.BookingRequests.Add(newBookingRequest);
+                db.SaveChanges();
+                LoadBookingRequests();
+                CurrentBookingRequest = BookingRequests.FirstOrDefault(x => x.BookingRequestId == newBookingRequest.BookingRequestId);
+            });
+
         }
 
         [RelayCommand]
@@ -128,8 +137,9 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void AddBookingRequest()
         {
-            BookingRequest newRequest = new BookingRequest();
-            CurrentBookingRequest = newRequest;
+            WeakReferenceMessenger.Default.Send(new AddBookingRequestMessage());
+            //BookingRequest newRequest = new BookingRequest();
+            //CurrentBookingRequest = newRequest;
         }
 
         [RelayCommand]

@@ -80,4 +80,14 @@ namespace ControlOfComputerClub.ViewModel.Messages
     /// </summary>
     public class CloseAddWorkplaceWindowMessage { }
 
+    /// <summary>
+    /// Сообщение для открытия окна для добавления заявки на бронирование.
+    /// </summary>
+    public class AddBookingRequestMessage { }
+
+    /// <summary>
+    /// Сообщение для закрытия окна добавления заявки на бронирование.
+    /// </summary>
+    public class CloseAddBookingRequestWindowMessage { }
+
 }

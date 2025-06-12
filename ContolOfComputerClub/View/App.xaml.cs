@@ -34,6 +34,7 @@ namespace ControlOfComputerClub.View
             WeakReferenceMessenger.Default.Register<OpenFileDialogMessage>(this, HandleOpenFileDialogMessage);
             WeakReferenceMessenger.Default.Register<AddClientMessage>(this, HandleAddClientMessage);
             WeakReferenceMessenger.Default.Register<AddWorkplaceMessage>(this, HandleAddWorkplaceMessage);
+            WeakReferenceMessenger.Default.Register<AddBookingRequestMessage>(this, HandleAddBookingRequestMessage);
         }
 
         private void HandleExitMessage(object recipient, ExitMessage message)
@@ -142,6 +143,19 @@ namespace ControlOfComputerClub.View
             window.ShowDialog();
         }
 
+        private void HandleAddBookingRequestMessage(object recipient, AddBookingRequestMessage message)
+        {
+            var window = new Dialogs.AddBookingRequestWindow();
+            if (window.DataContext == null)
+            {
+                var vm = new AddBookingRequestViewModel();
+                window.DataContext = vm;
+            }
+            RegisterAddBookingRequestWindowClose(window);
+            window.ShowDialog();
+        }
+
+
         private void RegisterAddClientWindowClose(Window window)
         {
             WeakReferenceMessenger.Default.Register<CloseAddClientWindowMessage>(window, (r, m) =>
@@ -163,6 +177,14 @@ namespace ControlOfComputerClub.View
             WeakReferenceMessenger.Default.Register<ErrorMessage>(this, (recipient, message) =>
             {
                 MessageBox.Show(message.Message, message.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            });
+        }
+
+        private void RegisterAddBookingRequestWindowClose(Window window)
+        {
+            WeakReferenceMessenger.Default.Register<CloseAddBookingRequestWindowMessage>(window, (r, m) =>
+            {
+                window.Close();
             });
         }
 

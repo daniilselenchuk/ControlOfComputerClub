@@ -5,29 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:ControlOfComputerClub.View.Converters"
         xmlns:viewmodel="clr-namespace:ControlOfComputerClub.ViewModel;assembly=ViewModel"
-        Icon="resources\ContactsApp_96x96.ico"
         Title="Заявки на бронирование" Height="600" Width="800"
-        mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=viewmodel:BookingRequestsViewModel}">
+        Icon="resources\ContactsApp_96x96.ico"
+        d:DataContext="{d:DesignInstance Type=viewmodel:BookingRequestsViewModel}"
+        mc:Ignorable="d">
 
     <Window.Resources>
         <converters:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
-        <viewmodel:ClientsViewModel x:Key="ClientsViewModel"/>
-        <viewmodel:WorkplacesViewModel x:Key="WorkplacesViewModel"/>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
-        <Style x:Key="ValidationTextBoxStyle" TargetType="TextBox">
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="True">
-                    <Setter Property="Background" Value="LightCoral"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
     </Window.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -39,81 +28,50 @@
             <Button Content="&gt;" Command="{Binding NextBookingRequestCommand}" Width="50" Margin="5"/>
             <Button Content="&gt;&gt;" Command="{Binding LastBookingRequestCommand}" Width="50" Margin="5"/>
             <Separator Width="1" Height="30" Margin="10,0"/>
-            <Button Content="Добавить" Command="{Binding AddBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
-            <Button Content="Сохранить" Command="{Binding SaveBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="90" Margin="5"/>
-            <Button Content="Удалить" Command="{Binding DeleteBookingRequestCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
+            <Button Content="Добавить" Command="{Binding AddBookingRequestCommand}" Width="80" Margin="5"/>
+            <Button Content="Сохранить" Command="{Binding SaveBookingRequestCommand}" Width="90" Margin="5"/>
+            <Button Content="Удалить" Command="{Binding DeleteBookingRequestCommand}" Width="80" Margin="5"/>
         </StackPanel>
 
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="ID заявки:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentBookingRequest.BookingRequestId}" Margin="5" IsReadOnly="True"/>
-
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="ID сотрудника:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentBookingRequest.EmployeeId, UpdateSourceTrigger=PropertyChanged}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
-
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="ID рабочего места:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentBookingRequest.WorkplaceId, UpdateSourceTrigger=PropertyChanged}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
-
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="ID клиента:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentBookingRequest.ClientId, UpdateSourceTrigger=PropertyChanged}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
-
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Начало:" Margin="5" VerticalAlignment="Center"/>
-            <DatePicker Grid.Row="4" Grid.Column="1" SelectedDate="{Binding CurrentBookingRequest.StartTime, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="Окончание:" Margin="5" VerticalAlignment="Center"/>
-            <DatePicker Grid.Row="5" Grid.Column="1" SelectedDate="{Binding CurrentBookingRequest.EndTime, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Статус заявки:" Margin="5" VerticalAlignment="Center"/>
-            <ComboBox Grid.Row="6" Grid.Column="1"
-                      SelectedValue="{Binding CurrentBookingRequest.RequestStatus, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedValuePath="Content" Margin="5">
-                <ComboBoxItem Content="Создана"/>
-                <ComboBoxItem Content="Завершена"/>
-                <ComboBoxItem Content="Отменена"/>
-            </ComboBox>
-        </Grid>
-
-        <DataGrid x:Name="ClientsGrid" Grid.Row="2"
+        <DataGrid x:Name="BookingRequestsGrid" Grid.Row="1"
                   AutoGenerateColumns="False"
-                  IsReadOnly="True"
+                  IsReadOnly="False"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
-                  ItemsSource="{Binding Clients, Source={StaticResource ClientsViewModel}}"
+                  ItemsSource="{Binding BookingRequests}"
+                  SelectedItem="{Binding CurrentBookingRequest, Mode=TwoWay}"
+                  SelectionMode="Single"
                   Margin="5">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding ClientId}" Width="*"/>
-                <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="2*"/>
-                <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}" Width="3*"/>
-                <DataGridTextColumn Header="Потрачено" Binding="{Binding AmountSpent}" Width="2*"/>
-                <DataGridTextColumn Header="Скидка" Binding="{Binding Discount}" Width="2*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <DataGrid x:Name="WorkplacesGrid" Grid.Row="3"
-          AutoGenerateColumns="False"
-          IsReadOnly="True"
-          CanUserAddRows="False"
-          CanUserDeleteRows="False"
-          ItemsSource="{Binding Workplaces, Source={StaticResource WorkplacesViewModel}}"
-          Margin="5">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding WorkplaceId}" Width="*"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status, Converter={StaticResource BoolToStatusConverter}}" Width="2*"/>
-                <DataGridTextColumn Header="Тариф" Binding="{Binding Tariff}" Width="2*"/>
-                <DataGridTextColumn Header="Конфигурация" Binding="{Binding Configuration}" Width="2*"/>
+                <DataGridTextColumn Header="ID"
+                                    Binding="{Binding BookingRequestId}"
+                                    IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="ID сотрудника"
+                                    Binding="{Binding EmployeeId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="2*"/>
+                <DataGridTextColumn Header="ID рабочего места"
+                                    Binding="{Binding WorkplaceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="2*"/>
+                <DataGridTextColumn Header="ID клиента"
+                                    Binding="{Binding ClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="2*"/>
+                <DataGridTextColumn Header="Начало"
+                                    Binding="{Binding StartTime, Mode=TwoWay, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                    Width="2*"/>
+                <DataGridTextColumn Header="Окончание"
+                                    Binding="{Binding EndTime, Mode=TwoWay, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                    Width="2*"/>
+                <DataGridComboBoxColumn Header="Статус заявки"
+                                        SelectedValueBinding="{Binding RequestStatus, Mode=TwoWay}"
+                                        Width="2*">
+                    <DataGridComboBoxColumn.ItemsSource>
+                        <x:Array Type="{x:Type sys:String}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <sys:String>Создана</sys:String>
+                            <sys:String>Завершена</sys:String>
+                            <sys:String>Отменена</sys:String>
+                        </x:Array>
+                    </DataGridComboBoxColumn.ItemsSource>
+                </DataGridComboBoxColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
