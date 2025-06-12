@@ -33,6 +33,7 @@ namespace ControlOfComputerClub.View
             WeakReferenceMessenger.Default.Register<OpenWorkplacesWindowMessage>(this, HandleOpenWorkplacesWindowMessage);
             WeakReferenceMessenger.Default.Register<OpenFileDialogMessage>(this, HandleOpenFileDialogMessage);
             WeakReferenceMessenger.Default.Register<AddClientMessage>(this, HandleAddClientMessage);
+            WeakReferenceMessenger.Default.Register<AddWorkplaceMessage>(this, HandleAddWorkplaceMessage);
         }
 
         private void HandleExitMessage(object recipient, ExitMessage message)
@@ -126,13 +127,32 @@ namespace ControlOfComputerClub.View
                 AddClientViewModel addClientViewModel = new AddClientViewModel();
                 addClientWindow.DataContext = addClientViewModel;
             }
-            RegisterWindowClose(addClientWindow);
+            RegisterAddClientWindowClose(addClientWindow);
             addClientWindow.ShowDialog();
         }
+        private void HandleAddWorkplaceMessage(object recipient, AddWorkplaceMessage message)
+        {
+            var window = new Dialogs.AddWorkplaceWindow();
+            if (window.DataContext == null)
+            {
+                var vm = new AddWorkplaceViewModel();
+                window.DataContext = vm;
+            }
+            RegisterAddWorkplaceWindowClose(window);
+            window.ShowDialog();
+        }
 
-        private void RegisterWindowClose(Window window)
+        private void RegisterAddClientWindowClose(Window window)
         {
             WeakReferenceMessenger.Default.Register<CloseAddClientWindowMessage>(window, (r, m) =>
+            {
+                window.Close();
+            });
+        }
+
+        private void RegisterAddWorkplaceWindowClose(Window window)
+        {
+            WeakReferenceMessenger.Default.Register<CloseAddWorkplaceWindowMessage>(window, (r, m) =>
             {
                 window.Close();
             });

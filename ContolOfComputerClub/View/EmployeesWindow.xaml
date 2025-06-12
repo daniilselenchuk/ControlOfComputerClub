@@ -9,6 +9,7 @@
         Icon="resources\ContactsApp_96x96.ico"
         d:DataContext="{d:DesignInstance Type=viewmodel:EmployeesViewModel}"
         mc:Ignorable="d">
+
     <Window.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <converters:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter"/>
@@ -50,7 +51,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -77,16 +78,24 @@
                 <ComboBoxItem Content="Кассир"/>
             </ComboBox>
 
-
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Паспорт:" Margin="5" VerticalAlignment="Center"/>
             <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentEmployee.NumberPassport, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
                      Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
 
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="Фото:" Margin="5" VerticalAlignment="Center"/>
-            <Image Grid.Row="5" Grid.Column="1" Margin="5" 
-                   Source="{Binding CurrentEmployee.Photo, Converter={StaticResource ByteArrayToImageConverter}}"/>
-            <Border Grid.Row="7" Grid.Column="5" Margin="5" BorderThickness="1" BorderBrush="Gray"/>
-            <Button Grid.Column="0" Grid.Row="6" Content="Загрузить фото" Command="{Binding LoadEmployeePhotoCommand}" Width="120" Height="30"/>
+            <Grid Grid.Row="5" Grid.ColumnSpan="2" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="Загрузить фото" Command="{Binding LoadEmployeePhotoCommand}" Width="120" Height="30"/>
+
+                <Border Grid.Column="2" BorderThickness="1" BorderBrush="Gray" Padding="5" HorizontalAlignment="Left">
+                    <Image Source="{Binding CurrentEmployee.Photo, Converter={StaticResource ByteArrayToImageConverter}}"
+                           Width="100" Height="100" Stretch="UniformToFill"/>
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

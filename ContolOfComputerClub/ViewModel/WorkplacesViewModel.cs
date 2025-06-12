@@ -4,13 +4,15 @@ using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.Model;
+using ControlOfComputerClub.ViewModel.Messages;
 
 namespace ControlOfComputerClub.ViewModel
 {
     public partial class WorkplacesViewModel : ObservableObject
     {
-        private Workplace? _workplaceCopy;
+        private Workplace? _originalWorkplaceCopy;
 
         [ObservableProperty]
         private Workplace? _currentWorkplace;
@@ -18,11 +20,19 @@ namespace ControlOfComputerClub.ViewModel
         [ObservableProperty]
         private ObservableCollection<Workplace> _workplaces = new();
 
-        public bool HasErrors => _workplaceCopy?.HasErrors ?? false;
+        public bool HasErrors => _originalWorkplaceCopy?.HasErrors ?? false;
 
         public WorkplacesViewModel()
         {
             LoadWorkplaces();
+            WeakReferenceMessenger.Default.Register<Workplace>(this, (r, newWorkplace) =>
+            {
+                using var db = new ApplicationDbContext();
+                db.Workplaces.Add(newWorkplace);
+                db.SaveChanges();
+                LoadWorkplaces();
+                CurrentWorkplace = Workplaces.FirstOrDefault(x => x.WorkplaceId == newWorkplace.WorkplaceId);
+            });
         }
 
         [RelayCommand]
@@ -39,21 +49,21 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void SaveWorkplace()
         {
-            if (_workplaceCopy == null) return;
+            if (_originalWorkplaceCopy == null) return;
 
             using (var db = new ApplicationDbContext())
             {
-                var existingWorkplace = db.Workplaces.FirstOrDefault(w => w.WorkplaceId == _workplaceCopy.WorkplaceId);
+                var existingWorkplace = db.Workplaces.FirstOrDefault(w => w.WorkplaceId == _originalWorkplaceCopy.WorkplaceId);
                 if (existingWorkplace != null)
                 {
-                    existingWorkplace.Status = _workplaceCopy.Status;
-                    existingWorkplace.Tariff = _workplaceCopy.Tariff;
-                    existingWorkplace.PriceOfWorkplace = _workplaceCopy.PriceOfWorkplace;
-                    existingWorkplace.Configuration = _workplaceCopy.Configuration;
+                    existingWorkplace.Status = _originalWorkplaceCopy.Status;
+                    existingWorkplace.Tariff = _originalWorkplaceCopy.Tariff;
+                    existingWorkplace.PriceOfWorkplace = _originalWorkplaceCopy.PriceOfWorkplace;
+                    existingWorkplace.Configuration = _originalWorkplaceCopy.Configuration;
                 }
                 else
                 {
-                    db.Workplaces.Add(_workplaceCopy);
+                    db.Workplaces.Add(_originalWorkplaceCopy);
                 }
                 db.SaveChanges();
             }
@@ -100,9 +110,7 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void AddWorkplace()
         {
-            _workplaceCopy = new Workplace();
-            CurrentWorkplace = _workplaceCopy;
-            CurrentWorkplace.Validate();
+            WeakReferenceMessenger.Default.Send(new AddWorkplaceMessage());
         }
 
         [RelayCommand]
@@ -129,7 +137,7 @@ namespace ControlOfComputerClub.ViewModel
 
             if (newValue != null)
             {
-                _workplaceCopy = new Workplace
+                _originalWorkplaceCopy = new Workplace
                 {
                     WorkplaceId = newValue.WorkplaceId,
                     Status = newValue.Status,
@@ -149,12 +157,12 @@ namespace ControlOfComputerClub.ViewModel
 
         private void CancelChanges()
         {
-            if (_workplaceCopy != null && CurrentWorkplace != null)
+            if (_originalWorkplaceCopy != null && CurrentWorkplace != null)
             {
-                _workplaceCopy.Status = CurrentWorkplace.Status;
-                _workplaceCopy.Tariff = CurrentWorkplace.Tariff;
-                _workplaceCopy.PriceOfWorkplace = CurrentWorkplace.PriceOfWorkplace;
-                _workplaceCopy.Configuration = CurrentWorkplace.Configuration;
+                _originalWorkplaceCopy.Status = CurrentWorkplace.Status;
+                _originalWorkplaceCopy.Tariff = CurrentWorkplace.Tariff;
+                _originalWorkplaceCopy.PriceOfWorkplace = CurrentWorkplace.PriceOfWorkplace;
+                _originalWorkplaceCopy.Configuration = CurrentWorkplace.Configuration;
             }
         }
     }

@@ -69,4 +69,15 @@ namespace ControlOfComputerClub.ViewModel.Messages
     /// Сообщение для закрытия окна добавления клиента.
     /// </summary>
     public class CloseAddClientWindowMessage { }
+
+    /// <summary>
+    /// Сообщение для открытия окна для добавления сотрудника.
+    /// </summary>
+    public class AddWorkplaceMessage { }
+
+    /// <summary>
+    /// Сообщение для закрытия окна добавления рабочего места.
+    /// </summary>
+    public class CloseAddWorkplaceWindowMessage { }
+
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Добавление клиента" Height="250" Width="400" ResizeMode="NoResize"
+        Icon="\resources\ContactsApp_96x96.ico"
         WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
@@ -29,8 +30,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID клиента:" Margin="5" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Client.ClientId}" Margin="5" IsReadOnly="True"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="ФИО:" Margin="5" VerticalAlignment="Center"/>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Client.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
@@ -38,13 +37,7 @@
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Телефон:" Margin="5" VerticalAlignment="Center"/>
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Client.PhoneNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Потрачено:" Margin="5" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Client.AmountSpent, UpdateSourceTrigger=PropertyChanged}" Margin="5" IsReadOnly="True"/>
-
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Скидка:" Margin="5" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Client.Discount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Margin="5" IsReadOnly="True"/>
-
-        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
             <Button Content="Добавить" Command="{Binding SaveCommand}" Width="100" Margin="5"/>
             <Button Content="Отмена" Command="{Binding CancelCommand}" Width="100" Margin="5"/>
         </StackPanel>

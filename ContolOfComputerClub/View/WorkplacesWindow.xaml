@@ -3,10 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ControlOfComputerClub.View"
         xmlns:converters="clr-namespace:ControlOfComputerClub.View.Converters"
         xmlns:viewmodel="clr-namespace:ControlOfComputerClub.ViewModel;assembly=ViewModel"
-        Title="Рабочие места" Height="600" Width="800"
+        Title="Рабочие места" Height="450" Width="800"
         Icon="resources\ContactsApp_96x96.ico"
         d:DataContext="{d:DesignInstance Type=viewmodel:WorkplacesViewModel}"
         mc:Ignorable="d">
@@ -21,22 +20,10 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-        <Style TargetType="DataGridRow">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="Blue"/>
-                    <Setter Property="Foreground" Value="White"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
     </Window.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -53,38 +40,9 @@
             <Button Content="Удалить" Command="{Binding DeleteWorkplaceCommand}" IsEnabled="{Binding HasErrors, Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
         </StackPanel>
 
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="ID рабочего места:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentWorkplace.WorkplaceId}" Margin="5" IsReadOnly="True"/>
-
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Статус:" Margin="5" VerticalAlignment="Center"/>
-            <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding CurrentWorkplace.Status, UpdateSourceTrigger=PropertyChanged}" Content="Активен" Margin="5"/>
-
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Тариф:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentWorkplace.Tariff, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
-
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Цена рабочего места:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentWorkplace.PriceOfWorkplace, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
-
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Конфигурация:" Margin="5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentWorkplace.Configuration, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Margin="5" Style="{StaticResource ValidationTextBoxStyle}"/>
-        </Grid>
-
-        <DataGrid x:Name="WorkplacesGrid" Grid.Row="2"
+        <DataGrid x:Name="WorkplacesGrid" Grid.Row="1"
                   AutoGenerateColumns="False"
-                  IsReadOnly="True"
+                  IsReadOnly="False"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   ItemsSource="{Binding Workplaces}"
@@ -92,11 +50,17 @@
                   SelectionMode="Single"
                   Margin="5">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding WorkplaceId}" Width="*"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status, Converter={StaticResource BoolToStatusConverter}}" Width="2*"/>
-                <DataGridTextColumn Header="Тариф" Binding="{Binding Tariff}" Width="2*"/>
-                <DataGridTextColumn Header="Цена" Binding="{Binding PriceOfWorkplace}" Width="2*"/>
-                <DataGridTextColumn Header="Конфигурация" Binding="{Binding Configuration}" Width="3*"/>
+                <DataGridTextColumn Header="ID"
+                                    Binding="{Binding WorkplaceId}"
+                                    IsReadOnly="True" Width="*"/>
+                <DataGridCheckBoxColumn Header="Статус"
+                                        Binding="{Binding Status, Mode=TwoWay}" Width="2*"/>
+                <DataGridTextColumn Header="Тариф"
+                                    Binding="{Binding Tariff, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="2*"/>
+                <DataGridTextColumn Header="Цена"
+                                    Binding="{Binding PriceOfWorkplace, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="2*"/>
+                <DataGridTextColumn Header="Конфигурация"
+                                    Binding="{Binding Configuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="3*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
