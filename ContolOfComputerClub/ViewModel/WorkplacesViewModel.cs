@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.Model;
 using ControlOfComputerClub.ViewModel.Messages;
+using Microsoft.EntityFrameworkCore;
 
 namespace ControlOfComputerClub.ViewModel
 {
@@ -20,7 +21,7 @@ namespace ControlOfComputerClub.ViewModel
         [ObservableProperty]
         private ObservableCollection<Workplace> _workplaces = new();
 
-        public bool HasErrors => _originalWorkplaceCopy?.HasErrors ?? false;
+        public bool HasErrors => CurrentWorkplace?.HasErrors ?? false;
 
         public WorkplacesViewModel()
         {
@@ -38,36 +39,32 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void LoadWorkplaces()
         {
-            using (var db = new ApplicationDbContext())
-            {
-                Workplaces = new ObservableCollection<Workplace>(db.Workplaces.ToList());
-            }
-            if (Workplaces.Count > 0)
-                CurrentWorkplace = Workplaces[0];
+            using var db = new ApplicationDbContext();
+            Workplaces = new ObservableCollection<Workplace>(db.Workplaces.ToList());
+            CurrentWorkplace = Workplaces.FirstOrDefault();
         }
 
         [RelayCommand]
         private void SaveWorkplace()
         {
-            if (_originalWorkplaceCopy == null) return;
+            if (CurrentWorkplace == null) return;
 
-            using (var db = new ApplicationDbContext())
+            using var db = new ApplicationDbContext();
+            var existing = db.Workplaces.FirstOrDefault(w => w.WorkplaceId == CurrentWorkplace.WorkplaceId);
+
+            if (existing != null)
             {
-                var existingWorkplace = db.Workplaces.FirstOrDefault(w => w.WorkplaceId == _originalWorkplaceCopy.WorkplaceId);
-                if (existingWorkplace != null)
-                {
-                    existingWorkplace.Status = _originalWorkplaceCopy.Status;
-                    existingWorkplace.Tariff = _originalWorkplaceCopy.Tariff;
-                    existingWorkplace.PriceOfWorkplace = _originalWorkplaceCopy.PriceOfWorkplace;
-                    existingWorkplace.Configuration = _originalWorkplaceCopy.Configuration;
-                }
-                else
-                {
-                    db.Workplaces.Add(_originalWorkplaceCopy);
-                }
-                db.SaveChanges();
+                existing.Status = CurrentWorkplace.Status;
+                existing.Tariff = CurrentWorkplace.Tariff;
+                existing.PriceOfWorkplace = CurrentWorkplace.PriceOfWorkplace;
+                existing.Configuration = CurrentWorkplace.Configuration;
+            }
+            else
+            {
+                db.Workplaces.Add(CurrentWorkplace);
             }
 
+            db.SaveChanges();
             LoadWorkplaces();
         }
 
@@ -117,16 +114,14 @@ namespace ControlOfComputerClub.ViewModel
         private void DeleteWorkplace()
         {
             if (CurrentWorkplace == null) return;
-            using (var db = new ApplicationDbContext())
+            using var db = new ApplicationDbContext();
+            var workplaceToDelete = db.Workplaces.FirstOrDefault(w => w.WorkplaceId == CurrentWorkplace.WorkplaceId);
+            if (workplaceToDelete != null)
             {
-                var workplaceToDelete = db.Workplaces.FirstOrDefault(w => w.WorkplaceId == CurrentWorkplace.WorkplaceId);
-                if (workplaceToDelete != null)
-                {
-                    db.Workplaces.Remove(workplaceToDelete);
-                    db.SaveChanges();
-                    Workplaces.Remove(CurrentWorkplace);
-                    CurrentWorkplace = Workplaces.Count > 0 ? Workplaces[0] : null;
-                }
+                db.Workplaces.Remove(workplaceToDelete);
+                db.SaveChanges();
+                Workplaces.Remove(CurrentWorkplace);
+                CurrentWorkplace = Workplaces.Count > 0 ? Workplaces[0] : null;
             }
         }
 
@@ -159,10 +154,10 @@ namespace ControlOfComputerClub.ViewModel
         {
             if (_originalWorkplaceCopy != null && CurrentWorkplace != null)
             {
-                _originalWorkplaceCopy.Status = CurrentWorkplace.Status;
-                _originalWorkplaceCopy.Tariff = CurrentWorkplace.Tariff;
-                _originalWorkplaceCopy.PriceOfWorkplace = CurrentWorkplace.PriceOfWorkplace;
-                _originalWorkplaceCopy.Configuration = CurrentWorkplace.Configuration;
+                CurrentWorkplace.Status = _originalWorkplaceCopy.Status;
+                CurrentWorkplace.Tariff = _originalWorkplaceCopy.Tariff;
+                CurrentWorkplace.PriceOfWorkplace = _originalWorkplaceCopy.PriceOfWorkplace;
+                CurrentWorkplace.Configuration = _originalWorkplaceCopy.Configuration;
             }
         }
     }
