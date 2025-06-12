@@ -34,30 +34,30 @@ namespace ControlOfComputerClub.ViewModel
         }
 
         [RelayCommand]
-private void LoadClients()
-{
-    using var db = new ApplicationDbContext();
-
-    var list = db.Clients
-        .Select(c => new Client
+        private void LoadClients()
         {
-            ClientId = c.ClientId,
-            Name = c.Name,
-            PhoneNumber = c.PhoneNumber,
-            AmountSpent = db.V_ClientAmountSpent
-                            .Where(v => v.ClientId == c.ClientId)
-                            .Select(v => v.AmountSpent)
-                            .FirstOrDefault(),
-            Discount = db.Clients
-                         .Where(x => x.ClientId == c.ClientId)
-                         .Select(x => x.Discount)
-                         .FirstOrDefault()
-        })
-        .ToList();
+            using var db = new ApplicationDbContext();
 
-    Clients = new ObservableCollection<Client>(list);
-    CurrentClient = Clients.FirstOrDefault();
-}
+            var list = db.Clients
+                .Select(c => new Client
+                {
+                    ClientId = c.ClientId,
+                    Name = c.Name,
+                    PhoneNumber = c.PhoneNumber,
+                    AmountSpent = db.V_ClientAmountSpent
+                                    .Where(v => v.ClientId == c.ClientId)
+                                    .Select(v => v.AmountSpent)
+                                    .FirstOrDefault(),
+                    Discount = db.Clients
+                                 .Where(x => x.ClientId == c.ClientId)
+                                 .Select(x => x.Discount)
+                                 .FirstOrDefault()
+                })
+                .ToList();
+
+            Clients = new ObservableCollection<Client>(list);
+            CurrentClient = Clients.FirstOrDefault();
+        }
 
 
 

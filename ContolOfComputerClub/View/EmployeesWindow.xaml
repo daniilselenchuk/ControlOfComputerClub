@@ -27,7 +27,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Панель навигации и операций -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
             <Button Content="&lt;&lt;" Command="{Binding FirstEmployeeCommand}" Width="50" Margin="5"/>
             <Button Content="&lt;" Command="{Binding PreviousEmployeeCommand}" Width="50" Margin="5"/>

@@ -28,7 +28,6 @@
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="Blue"/>
-                    <!-- ✅ Выбранный элемент будет синим -->
                     <Setter Property="Foreground" Value="White"/>
                 </Trigger>
             </Style.Triggers>
