@@ -5,23 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ControlOfComputerClub.View" 
         xmlns:viewmodel="clr-namespace:ControlOfComputerClub.ViewModel;assembly=ViewModel" 
-        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing"
         d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
+        Icon="resources\ContactsApp_96x96.ico"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Главная" Height="450" Width="800">
     <Window.InputBindings>
         <KeyBinding Key="X" Modifiers="Alt" Command="{Binding ExitCommand}" />
         <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ShowAboutCommand}" />
+        <KeyBinding Key="B" Modifiers="Alt" Command="{Binding OpenClientsWindowCommand}"/>
+        <KeyBinding Key="W" Modifiers="Alt" Command="{Binding OpenEmployeesWindowCommand}"/>
+        <KeyBinding Key="V" Modifiers="Alt" Command="{Binding OpenWorkplacesWindowCommand}"/>
+        <KeyBinding Key="T" Modifiers="Alt" Command="{Binding OpenBookingRequestsWindowCommand}"/>
     </Window.InputBindings>
-    
+
     <Grid>
-        <Menu>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Menu x:Name="Menu" Grid.Row="0">
             <MenuItem Header="Файл">
                 <MenuItem Header="Выход" Command="{Binding ExitCommand}" 
                           InputGestureText="Alt+X"/>
                 <MenuItem Header="О программе" Command="{Binding ShowAboutCommand}" 
                           InputGestureText="Alt+I"/>
             </MenuItem>
+            <MenuItem Header="Справочники">
+                <MenuItem Header="Клиенты" Command="{Binding OpenClientsWindowCommand}"
+                          InputGestureText="Alt+B"/>
+                <MenuItem Header="Сотрудники" Command="{Binding OpenEmployeesWindowCommand}"
+                          InputGestureText="Alt+W"/>
+                <MenuItem Header="Рабочие места" Command="{Binding OpenWorkplacesWindowCommand}" 
+                          InputGestureText="Alt+V"/>
+            </MenuItem>
+            <MenuItem Header="Документы">
+                <MenuItem Header="Запросы на бронирование" Command="{Binding OpenBookingRequestsWindowCommand}"
+                          InputGestureText="Alt+T"/>
+            </MenuItem>
         </Menu>
+
+        <DataGrid x:Name="EmployeesGrid" Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  ItemsSource="{Binding Employees}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding EmployeeId}" 
+                                    Width="*"/>
+                <DataGridTextColumn Header="Имя" Binding="{Binding Name}" 
+                                    Width="2*"/>
+                <DataGridTextColumn Header="Должность" Binding="{Binding JobTitle}" 
+                                    Width="2*"/>
+                <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}" 
+                                    Width="3*"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

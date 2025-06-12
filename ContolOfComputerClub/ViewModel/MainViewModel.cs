@@ -1,12 +1,51 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using ControlOfComputerClub.Model;
 using ControlOfComputerClub.ViewModel.Messages;
+using System.Collections.ObjectModel;
 
 namespace ControlOfComputerClub.ViewModel
 {
     public partial class MainViewModel : ObservableObject
     {
+        [ObservableProperty]
+        private ObservableCollection<Employee>? _employees;
+
+        [ObservableProperty]
+        private ObservableCollection<BookingRequest>? _bookingRequests;
+
+        [ObservableProperty]
+        private Employee? _selectedEmployee;
+
+        public MainViewModel()
+        {
+            LoadEmployees();
+        }
+
+        [RelayCommand]
+        private void OpenClientsWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenClientsWindowMessage());
+        }
+
+        [RelayCommand]
+        private void OpenBookingRequestsWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenBookingRequestsWindowMessage());
+        }
+
+        [RelayCommand]
+        private void OpenEmployeesWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenEmployeesWindowMessage());
+        }
+
+        [RelayCommand]
+        private void OpenWorkplacesWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenWorkplacesWindowMessage());
+        }
 
         [RelayCommand]
         private void Exit()
@@ -18,6 +57,14 @@ namespace ControlOfComputerClub.ViewModel
         private void ShowAbout()
         {
             WeakReferenceMessenger.Default.Send(new ShowAboutMessage());
+        }
+
+        private void LoadEmployees()
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                Employees = new ObservableCollection<Employee>(db.Employees.ToList());
+            }
         }
     }
 }
