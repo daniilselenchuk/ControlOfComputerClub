@@ -90,10 +90,10 @@
                             Binding="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Width="3*"/>
                 <DataGridTextColumn Header="Потрачено"
-                            Binding="{Binding AmountSpent}"
+                            Binding="{Binding AmountSpent, StringFormat={}{0:F2}}"
                             IsReadOnly="True" Width="2*"/>
                 <DataGridTextColumn Header="Скидка"
-                            Binding="{Binding Discount}"
+                            Binding="{Binding Discount, StringFormat={}{0:F2}}"
                             IsReadOnly="True" Width="2*"/>
             </DataGrid.Columns>
         </DataGrid>

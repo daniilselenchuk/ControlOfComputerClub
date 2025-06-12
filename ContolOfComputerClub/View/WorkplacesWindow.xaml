@@ -56,9 +56,9 @@
                 <DataGridCheckBoxColumn Header="Статус"
                                         Binding="{Binding Status, Mode=TwoWay}" Width="2*"/>
                 <DataGridTextColumn Header="Тариф"
-                                    Binding="{Binding Tariff, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="2*"/>
+                                    Binding="{Binding Tariff, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F2}}" Width="2*"/>
                 <DataGridTextColumn Header="Цена"
-                                    Binding="{Binding PriceOfWorkplace, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="2*"/>
+                                    Binding="{Binding PriceOfWorkplace, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F2}}" Width="2*"/>
                 <DataGridTextColumn Header="Конфигурация"
                                     Binding="{Binding Configuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="3*"/>
             </DataGrid.Columns>
