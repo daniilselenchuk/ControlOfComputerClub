@@ -60,4 +60,13 @@ namespace ControlOfComputerClub.ViewModel.Messages
         }
     }
 
+    /// <summary>
+    /// Сообщение для открытия окна для добавления клиента.
+    /// </summary>
+    public class AddClientMessage { }
+
+    /// <summary>
+    /// Сообщение для закрытия окна добавления клиента.
+    /// </summary>
+    public class CloseAddClientWindowMessage { }
 }

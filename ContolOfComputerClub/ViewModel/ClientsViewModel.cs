@@ -31,6 +31,15 @@ namespace ControlOfComputerClub.ViewModel
         public ClientsViewModel()
         {
             LoadClients();
+            WeakReferenceMessenger.Default.Register<Client>(this, (r, newClient) =>
+            {
+                using var db = new ApplicationDbContext();
+                db.Clients.Add(newClient);
+                db.SaveChanges();
+
+                LoadClients();
+                CurrentClient = Clients.FirstOrDefault(c => c.ClientId == newClient.ClientId);
+            });
         }
 
         [RelayCommand]
@@ -58,9 +67,6 @@ namespace ControlOfComputerClub.ViewModel
             Clients = new ObservableCollection<Client>(list);
             CurrentClient = Clients.FirstOrDefault();
         }
-
-
-
 
         [RelayCommand]
         private void SaveClient()
@@ -139,9 +145,7 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void AddClient()
         {
-            Client newClient = new Client();
-            CurrentClient = newClient;
-            CurrentClient.Validate();
+            WeakReferenceMessenger.Default.Send(new AddClientMessage());
         }
 
         [RelayCommand]

@@ -41,7 +41,7 @@
             <Button Content="Удалить" Command="{Binding DeleteClientCommand}" IsEnabled="{Binding HasErrors,Converter={StaticResource InverseBoolConverter}}" Width="80" Margin="5"/>
         </StackPanel>
 
-        <Grid Grid.Row="1">
+        <!--<Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -68,23 +68,33 @@
 
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Скидка:" Margin="5" VerticalAlignment="Center"/>
             <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentClient.Discount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Margin="5" IsReadOnly="True"/>
-        </Grid>
+        </Grid>-->
 
-        <DataGrid x:Name="ClientsGrid" Grid.Row="2"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  ItemsSource="{Binding Clients}"
-                  SelectedItem="{Binding CurrentClient, Mode=TwoWay}"
-                  SelectionMode="Single"
-                  Margin="5">
+        <DataGrid x:Name="ClientsGrid" Grid.Row="1"
+          AutoGenerateColumns="False"
+          IsReadOnly="False"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          ItemsSource="{Binding Clients}"
+          SelectedItem="{Binding CurrentClient, Mode=TwoWay}"
+          SelectionMode="Single"
+          Margin="5">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding ClientId}" Width="*"/>
-                <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="2*"/>
-                <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}" Width="3*"/>
-                <DataGridTextColumn Header="Потрачено" Binding="{Binding AmountSpent}" Width="2*"/>
-                <DataGridTextColumn Header="Скидка" Binding="{Binding Discount}" Width="2*"/>
+                <DataGridTextColumn Header="ID"
+                            Binding="{Binding ClientId}"
+                            IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Имя"
+                            Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="2*"/>
+                <DataGridTextColumn Header="Телефон"
+                            Binding="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="3*"/>
+                <DataGridTextColumn Header="Потрачено"
+                            Binding="{Binding AmountSpent}"
+                            IsReadOnly="True" Width="2*"/>
+                <DataGridTextColumn Header="Скидка"
+                            Binding="{Binding Discount}"
+                            IsReadOnly="True" Width="2*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

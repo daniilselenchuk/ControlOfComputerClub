@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.ViewModel;
 using ControlOfComputerClub.ViewModel.Messages;
+using ControlOfComputerClub.View.Dialogs;
 using System.IO;
 
 namespace ControlOfComputerClub.View
@@ -31,6 +32,7 @@ namespace ControlOfComputerClub.View
             WeakReferenceMessenger.Default.Register<OpenEmployeesWindowMessage>(this, HandleOpenEmployeesWindowMessage);
             WeakReferenceMessenger.Default.Register<OpenWorkplacesWindowMessage>(this, HandleOpenWorkplacesWindowMessage);
             WeakReferenceMessenger.Default.Register<OpenFileDialogMessage>(this, HandleOpenFileDialogMessage);
+            WeakReferenceMessenger.Default.Register<AddClientMessage>(this, HandleAddClientMessage);
         }
 
         private void HandleExitMessage(object recipient, ExitMessage message)
@@ -115,6 +117,25 @@ namespace ControlOfComputerClub.View
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+        private void HandleAddClientMessage(object recipient, AddClientMessage message)
+        {
+            AddClientWindow addClientWindow = new AddClientWindow();
+            if (addClientWindow.DataContext == null)
+            {
+                AddClientViewModel addClientViewModel = new AddClientViewModel();
+                addClientWindow.DataContext = addClientViewModel;
+            }
+            RegisterWindowClose(addClientWindow);
+            addClientWindow.ShowDialog();
+        }
+
+        private void RegisterWindowClose(Window window)
+        {
+            WeakReferenceMessenger.Default.Register<CloseAddClientWindowMessage>(window, (r, m) =>
+            {
+                window.Close();
+            });
         }
 
         private void RegisterErrorHandler()
