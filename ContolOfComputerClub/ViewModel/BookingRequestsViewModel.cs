@@ -15,23 +15,21 @@ namespace ControlOfComputerClub.ViewModel
     {
         private BookingRequest? _originalBookingRequestCopy;
 
-        /// <summary>
-        /// Текущая выбранная заявка.
-        /// </summary>
         [ObservableProperty]
         private BookingRequest? _currentBookingRequest;
 
-        /// <summary>
-        /// Список заявок, загруженных из базы данных.
-        /// </summary>
         [ObservableProperty]
         private ObservableCollection<BookingRequest> _bookingRequests = new();
+
+        [ObservableProperty]
+        private string _clientSearchQuery = string.Empty;
 
         public bool HasErrors => CurrentBookingRequest?.HasErrors ?? false;
 
         public BookingRequestsViewModel()
         {
             LoadBookingRequests();
+
             WeakReferenceMessenger.Default.Register<BookingRequest>(this, (r, newBookingRequest) =>
             {
                 using var db = new ApplicationDbContext();
@@ -40,29 +38,59 @@ namespace ControlOfComputerClub.ViewModel
                 LoadBookingRequests();
                 CurrentBookingRequest = BookingRequests.FirstOrDefault(x => x.BookingRequestId == newBookingRequest.BookingRequestId);
             });
-
         }
 
         [RelayCommand]
         private void LoadBookingRequests()
         {
-            using (var db = new ApplicationDbContext())
-            {
-                BookingRequests = new ObservableCollection<BookingRequest>(db.BookingRequests.ToList());
-            }
+            using var db = new ApplicationDbContext();
+            BookingRequests = new ObservableCollection<BookingRequest>(
+                db.BookingRequests.OrderBy(b => b.StartTime).ToList());
             if (BookingRequests.Count > 0)
                 CurrentBookingRequest = BookingRequests[0];
         }
 
         [RelayCommand]
+        private void FilterBookingRequests()
+        {
+            using var db = new ApplicationDbContext();
+
+            if (string.IsNullOrWhiteSpace(ClientSearchQuery))
+            {
+                BookingRequests = new ObservableCollection<BookingRequest>(
+                    db.BookingRequests.OrderBy(b => b.StartTime).ToList());
+                return;
+            }
+            var clientIds = db.Clients
+                .Where(c => c.Name.Contains(ClientSearchQuery))
+                .Select(c => c.ClientId)
+                .ToList();
+
+            var filtered = db.BookingRequests
+                .Where(b => clientIds.Contains(b.ClientId))
+                .OrderBy(b => b.StartTime)
+                .ToList();
+            BookingRequests = new ObservableCollection<BookingRequest>(filtered);
+        }
+
+        [RelayCommand]
+        private void ResetFilter()
+        {
+            ClientSearchQuery = string.Empty;
+            LoadBookingRequests();
+        }
+
+        [RelayCommand]
         private void SaveBookingRequest()
         {
-            if (CurrentBookingRequest == null)
-                return;
-
-            using (var db = new ApplicationDbContext())
+            try
             {
+                if (CurrentBookingRequest == null)
+                    throw new ArgumentNullException(nameof(CurrentBookingRequest), "Заявка не может быть пустой.");
+
+                using var db = new ApplicationDbContext();
                 var existing = db.BookingRequests.FirstOrDefault(b => b.BookingRequestId == CurrentBookingRequest.BookingRequestId);
+
                 if (existing != null)
                 {
                     existing.EmployeeId = CurrentBookingRequest.EmployeeId;
@@ -76,31 +104,27 @@ namespace ControlOfComputerClub.ViewModel
                 {
                     db.BookingRequests.Add(CurrentBookingRequest);
                 }
-                try
-                {
-                    db.SaveChanges();
-                    LoadBookingRequests();
-                }
-                catch (DbUpdateException ex)
-                {
-                    WeakReferenceMessenger.Default.Send(new ErrorMessage("Ошибка базы данных", ex.InnerException?.Message ?? "Неизвестная ошибка"));
-                }
-                catch (FormatException ex)
-                {
-                    WeakReferenceMessenger.Default.Send(new ErrorMessage("Ошибка формата данных", ex.Message));
-                }
-                catch (Exception ex)
-                {
-                    WeakReferenceMessenger.Default.Send(new ErrorMessage("Неизвестная ошибка", ex.Message));
-                }
+
+                db.SaveChanges();
+                LoadBookingRequests();
+            }
+            catch (DbUpdateException ex)
+            {
+                WeakReferenceMessenger.Default.Send(new ErrorMessage("Ошибка базы данных", ex.InnerException?.Message ?? "Неизвестная ошибка"));
+            }
+            catch (FormatException ex)
+            {
+                WeakReferenceMessenger.Default.Send(new ErrorMessage("Ошибка формата данных", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                WeakReferenceMessenger.Default.Send(new ErrorMessage("Неизвестная ошибка", ex.Message));
             }
         }
 
         [RelayCommand]
         private void NextBookingRequest()
         {
-            if (CurrentBookingRequest == null || BookingRequests.Count == 0)
-                return;
             CancelChanges();
             int index = BookingRequests.IndexOf(CurrentBookingRequest);
             if (index < BookingRequests.Count - 1)
@@ -110,8 +134,6 @@ namespace ControlOfComputerClub.ViewModel
         [RelayCommand]
         private void PreviousBookingRequest()
         {
-            if (CurrentBookingRequest == null || BookingRequests.Count == 0)
-                return;
             CancelChanges();
             int index = BookingRequests.IndexOf(CurrentBookingRequest);
             if (index > 0)
@@ -131,15 +153,13 @@ namespace ControlOfComputerClub.ViewModel
         {
             CancelChanges();
             if (BookingRequests.Count > 0)
-                CurrentBookingRequest = BookingRequests[BookingRequests.Count - 1];
+                CurrentBookingRequest = BookingRequests[^1];
         }
 
         [RelayCommand]
         private void AddBookingRequest()
         {
             WeakReferenceMessenger.Default.Send(new AddBookingRequestMessage());
-            //BookingRequest newRequest = new BookingRequest();
-            //CurrentBookingRequest = newRequest;
         }
 
         [RelayCommand]
@@ -148,16 +168,14 @@ namespace ControlOfComputerClub.ViewModel
             if (CurrentBookingRequest == null)
                 return;
 
-            using (var db = new ApplicationDbContext())
+            using var db = new ApplicationDbContext();
+            var requestToDelete = db.BookingRequests.FirstOrDefault(b => b.BookingRequestId == CurrentBookingRequest.BookingRequestId);
+            if (requestToDelete != null)
             {
-                var requestToDelete = db.BookingRequests.FirstOrDefault(b => b.BookingRequestId == CurrentBookingRequest.BookingRequestId);
-                if (requestToDelete != null)
-                {
-                    db.BookingRequests.Remove(requestToDelete);
-                    db.SaveChanges();
-                    BookingRequests.Remove(CurrentBookingRequest);
-                    CurrentBookingRequest = BookingRequests.Count > 0 ? BookingRequests[0] : null;
-                }
+                db.BookingRequests.Remove(requestToDelete);
+                db.SaveChanges();
+                BookingRequests.Remove(CurrentBookingRequest);
+                CurrentBookingRequest = BookingRequests.Count > 0 ? BookingRequests[0] : null;
             }
         }
 
@@ -180,6 +198,11 @@ namespace ControlOfComputerClub.ViewModel
                 newValue.ErrorsChanged += OnErrorsChanged;
             }
             OnPropertyChanged(nameof(HasErrors));
+        }
+
+        partial void OnClientSearchQueryChanged(string value)
+        {
+            FilterBookingRequests();
         }
 
         private void OnErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
