@@ -121,4 +121,11 @@ namespace ControlOfComputerClub.ViewModel.Messages
         }
     }
 
+    /// <summary>
+    /// Сообщение для открытия окна запросов.
+    /// </summary>
+    public class OpenQueryWindowMessage
+    {
+    }
+
 }

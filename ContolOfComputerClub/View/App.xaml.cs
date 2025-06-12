@@ -39,6 +39,7 @@ namespace ControlOfComputerClub.View
             WeakReferenceMessenger.Default.Register<AddBookingRequestMessage>(this, HandleAddBookingRequestMessage);
             WeakReferenceMessenger.Default.Register<OpenSelectionDialogMessage>(this, HandleOpenSelectionDialogMessage);
             WeakReferenceMessenger.Default.Register<CloseSelectionDialogMessage>(this, HandleCloseSelectionDialogMessage);
+            WeakReferenceMessenger.Default.Register<OpenQueryWindowMessage>(this, HandleOpenQueryWindowMessage);
         }
 
         private void HandleExitMessage(object recipient, ExitMessage message)
@@ -183,6 +184,17 @@ namespace ControlOfComputerClub.View
         {
             var window = Application.Current.Windows.OfType<SelectionDialogWindow>().FirstOrDefault();
             window?.Close();
+        }
+
+        private void HandleOpenQueryWindowMessage(object recipient, OpenQueryWindowMessage message)
+        {
+            var window = new QueryWindow();
+            if (window.DataContext == null)
+            {
+                var viewModel = new QueryViewModel();
+                window.DataContext = viewModel;
+            }
+            window.ShowDialog();
         }
 
         private void RegisterAddClientWindowClose(Window window)

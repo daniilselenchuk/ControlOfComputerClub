@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ControlOfComputerClub.View
+namespace ControlOfComputerClub.View.Controls
 {
     /// <summary>
-    /// Логика взаимодействия для QueryWindow.xaml
+    /// Логика взаимодействия для QueryControl1.xaml
     /// </summary>
-    public partial class QueryWindow : Window
+    public partial class QueryControl1 : UserControl
     {
-        public QueryWindow()
+        public QueryControl1()
         {
             InitializeComponent();
         }

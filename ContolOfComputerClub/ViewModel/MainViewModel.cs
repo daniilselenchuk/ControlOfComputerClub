@@ -9,20 +9,6 @@ namespace ControlOfComputerClub.ViewModel
 {
     public partial class MainViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private ObservableCollection<Employee>? _employees;
-
-        [ObservableProperty]
-        private ObservableCollection<BookingRequest>? _bookingRequests;
-
-        [ObservableProperty]
-        private Employee? _selectedEmployee;
-
-        public MainViewModel()
-        {
-            LoadEmployees();
-        }
-
         [RelayCommand]
         private void OpenClientsWindow()
         {
@@ -48,6 +34,12 @@ namespace ControlOfComputerClub.ViewModel
         }
 
         [RelayCommand]
+        private void OpenQueryWindow()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenQueryWindowMessage());
+        }
+
+        [RelayCommand]
         private void Exit()
         {
             WeakReferenceMessenger.Default.Send(new ExitMessage());
@@ -57,14 +49,6 @@ namespace ControlOfComputerClub.ViewModel
         private void ShowAbout()
         {
             WeakReferenceMessenger.Default.Send(new ShowAboutMessage());
-        }
-
-        private void LoadEmployees()
-        {
-            using (var db = new ApplicationDbContext())
-            {
-                Employees = new ObservableCollection<Employee>(db.Employees.ToList());
-            }
         }
     }
 }
