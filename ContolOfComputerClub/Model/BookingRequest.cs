@@ -9,9 +9,15 @@ namespace ControlOfComputerClub.Model
     public partial class BookingRequest : ObservableValidator, IValidatableObject
     {
         public int BookingRequestId { get; set; }
-        public int EmployeeId { get; set; }
-        public int WorkplaceId { get; set; }
-        public int ClientId { get; set; }
+
+        [ObservableProperty]
+        private int _employeeId;
+
+        [ObservableProperty]
+        public int _workplaceId;
+
+        [ObservableProperty]
+        public int _clientId;
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 

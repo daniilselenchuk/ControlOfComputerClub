@@ -61,15 +61,12 @@ namespace ControlOfComputerClub.ViewModel
             {
                 case Employee employee:
                     BookingRequest.EmployeeId = employee.EmployeeId;
-                    OnPropertyChanged(nameof(BookingRequest));
                     break;
                 case Workplace workplace:
                     BookingRequest.WorkplaceId = workplace.WorkplaceId;
-                    OnPropertyChanged(nameof(BookingRequest));
                     break;
                 case Client client:
                     BookingRequest.ClientId = client.ClientId;
-                    OnPropertyChanged(nameof(BookingRequest));
                     break;
             }
         }

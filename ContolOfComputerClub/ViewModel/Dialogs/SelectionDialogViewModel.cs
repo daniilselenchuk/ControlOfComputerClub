@@ -35,7 +35,5 @@ namespace ControlOfComputerClub.ViewModel
         {
             WeakReferenceMessenger.Default.Send(new CloseSelectionDialogMessage());
         }
-
-        public static object SelectionResult { get; private set; }
     }
 }
