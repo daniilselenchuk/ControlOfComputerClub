@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterOwner">
 
     <TabControl>
-        <TabItem Header="1">
+        <TabItem Header="Запросы">
             <controls:QueryControl1 />
         </TabItem>
         <TabItem Header="2">

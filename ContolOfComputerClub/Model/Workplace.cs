@@ -10,7 +10,8 @@ namespace ControlOfComputerClub.Model
         private decimal? _priceOfWorkplace;
         private string? _configuration;
 
-        public int WorkplaceId { get; set; }
+        [ObservableProperty]
+        public int _workplaceId;
 
         [Required(ErrorMessage = "Статус обязателен")]
         public bool Status

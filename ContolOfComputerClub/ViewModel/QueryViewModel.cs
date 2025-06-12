@@ -59,7 +59,8 @@ namespace ControlOfComputerClub.ViewModel
                 " Status AS [Статус]," +
                 " Tariff AS [Тариф]," +
                 " PriceOfWorkplace AS [Цена]," +
-                " Configuration AS [Конфигурация] " +
+                " Configuration AS [Конфигурация], " +
+                "ROUND(CAST(PriceOfWorkplace AS float) / CAST(Tariff AS float), 2) AS [Окупаемость (часов)]"+
                 "FROM Workplaces";
             QueryResults = LoadFromSql(sql);
         }
@@ -67,13 +68,13 @@ namespace ControlOfComputerClub.ViewModel
         private void LoadBookings()
         {
             const string sql = 
-                "SELECT BookingRequestId AS [ID]," +
+                " SELECT BookingRequestId AS [ID]," +
                 " EmployeeId AS [Сотрудник]," +
-                " WorkplaceId AS [Раб. место]," +
+                " WorkplaceId As [Рабочее место]," +
                 " ClientId AS [Клиент]," +
                 " StartTime AS [Начало]," +
                 " EndTime AS [Окончание]," +
-                " RequestStatus AS [Статус]" +
+                " RequestStatus AS [Статус] " +
                 " FROM BookingRequests";
             QueryResults = LoadFromSql(sql);
         }
