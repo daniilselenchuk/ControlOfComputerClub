@@ -38,20 +38,24 @@ namespace ControlOfComputerClub.ViewModel
 
         private void LoadEmployees()
         {
-            const string sql = 
-                "SELECT EmployeeId AS [Код]," +
-                " Name AS [ФИО]," +
-                " JobTitle AS [Должность]," +
-                " PhoneNumber AS [Телефон]," +
-                " NumberPassport AS [Паспорт]" +
-                " FROM Employees";
+            const string sql =
+                "SELECT e.EmployeeId AS [ID]," +
+                " e.Name AS [ФИО]," +
+                " e.JobTitle AS [Должность]," +
+                " e.PhoneNumber AS [Телефон]," +
+                " e.NumberPassport AS [Паспорт]," +
+                " COUNT(br.BookingRequestId) AS [Заявок]" +
+                " FROM Employees e" +
+                " JOIN BookingRequests br " +
+                "ON br.EmployeeId = e.EmployeeId" +
+                " GROUP BY e.EmployeeId, e.Name, e.JobTitle, e.PhoneNumber, e.NumberPassport";
             QueryResults = LoadFromSql(sql);
         }
 
         private void LoadWorkplaces()
         {
             const string sql = 
-                "SELECT WorkplaceId AS [Код]," +
+                "SELECT WorkplaceId AS [ID]," +
                 " Status AS [Статус]," +
                 " Tariff AS [Тариф]," +
                 " PriceOfWorkplace AS [Цена]," +
@@ -63,7 +67,7 @@ namespace ControlOfComputerClub.ViewModel
         private void LoadBookings()
         {
             const string sql = 
-                "SELECT BookingRequestId AS [Код]," +
+                "SELECT BookingRequestId AS [ID]," +
                 " EmployeeId AS [Сотрудник]," +
                 " WorkplaceId AS [Раб. место]," +
                 " ClientId AS [Клиент]," +
