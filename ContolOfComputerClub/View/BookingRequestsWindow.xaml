@@ -76,6 +76,17 @@
                 <DataGridTextColumn Header="Окончание"
                                     Binding="{Binding EndTime, Mode=TwoWay, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
                                     Width="2*"/>
+                <DataGridTextColumn Header="Цена за сеанс"
+                    IsReadOnly="True"
+                    Binding="{Binding SessionPrice, UpdateSourceTrigger=PropertyChanged}"
+                    Width="2*">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="Yellow"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                
                 <DataGridComboBoxColumn Header="Статус заявки"
                                         SelectedValueBinding="{Binding RequestStatus, Mode=TwoWay}"
                                         Width="2*">
