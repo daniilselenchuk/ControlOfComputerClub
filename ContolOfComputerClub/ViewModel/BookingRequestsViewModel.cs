@@ -24,6 +24,12 @@ namespace ControlOfComputerClub.ViewModel
         [ObservableProperty]
         private string _clientSearchQuery = string.Empty;
 
+        [ObservableProperty]
+        private string _clientFullName = string.Empty;
+
+        [ObservableProperty]
+        private string _employeeFullName = string.Empty;
+
         public bool HasErrors => CurrentBookingRequest?.HasErrors ?? false;
 
         public BookingRequestsViewModel()
@@ -178,11 +184,31 @@ namespace ControlOfComputerClub.ViewModel
                 CurrentBookingRequest = BookingRequests.Count > 0 ? BookingRequests[0] : null;
             }
         }
-
         partial void OnCurrentBookingRequestChanged(BookingRequest? oldValue, BookingRequest? newValue)
         {
+            using var db = new ApplicationDbContext();
+
+            if (newValue != null)
+            {
+                ClientFullName = db.Clients
+                    .Where(c => c.ClientId == newValue.ClientId)
+                    .Select(c => c.Name)
+                    .FirstOrDefault() ?? "Неизвестный клиент";
+
+                EmployeeFullName = db.Employees
+                    .Where(e => e.EmployeeId == newValue.EmployeeId)
+                    .Select(e => e.Name)
+                    .FirstOrDefault() ?? "Неизвестный сотрудник";
+            }
+            else
+            {
+                ClientFullName = string.Empty;
+                EmployeeFullName = string.Empty;
+            }
+
             if (oldValue != null)
                 oldValue.ErrorsChanged -= OnErrorsChanged;
+
             if (newValue != null)
             {
                 _originalBookingRequestCopy = new BookingRequest
@@ -197,6 +223,7 @@ namespace ControlOfComputerClub.ViewModel
                 };
                 newValue.ErrorsChanged += OnErrorsChanged;
             }
+
             OnPropertyChanged(nameof(HasErrors));
         }
 

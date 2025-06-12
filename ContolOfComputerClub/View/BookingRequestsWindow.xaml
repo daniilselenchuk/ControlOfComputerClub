@@ -18,35 +18,37 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="0,0,0,10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0">
+            <Button Content="&lt;&lt;" Command="{Binding FirstBookingRequestCommand}" Width="50" Margin="5"/>
+            <Button Content="&lt;" Command="{Binding PreviousBookingRequestCommand}" Width="50" Margin="5"/>
+            <TextBlock Text="{Binding CurrentBookingRequest.BookingRequestId}" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <Button Content="&gt;" Command="{Binding NextBookingRequestCommand}" Width="50" Margin="5"/>
+            <Button Content="&gt;&gt;" Command="{Binding LastBookingRequestCommand}" Width="50" Margin="5"/>
+            <Separator Width="1" Height="30" Margin="10,0"/>
+            <Button Content="Добавить" Command="{Binding AddBookingRequestCommand}" Width="80" Margin="5"/>
+            <Button Content="Сохранить" Command="{Binding SaveBookingRequestCommand}" Width="90" Margin="5"/>
+            <Button Content="Удалить" Command="{Binding DeleteBookingRequestCommand}" Width="80" Margin="5"/>
+        </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0">
-                <Button Content="&lt;&lt;" Command="{Binding FirstBookingRequestCommand}" Width="50" Margin="5"/>
-                <Button Content="&lt;" Command="{Binding PreviousBookingRequestCommand}" Width="50" Margin="5"/>
-                <TextBlock Text="{Binding CurrentBookingRequest.BookingRequestId}" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
-                <Button Content="&gt;" Command="{Binding NextBookingRequestCommand}" Width="50" Margin="5"/>
-                <Button Content="&gt;&gt;" Command="{Binding LastBookingRequestCommand}" Width="50" Margin="5"/>
-                <Separator Width="1" Height="30" Margin="10,0"/>
-                <Button Content="Добавить" Command="{Binding AddBookingRequestCommand}" Width="80" Margin="5"/>
-                <Button Content="Сохранить" Command="{Binding SaveBookingRequestCommand}" Width="90" Margin="5"/>
-                <Button Content="Удалить" Command="{Binding DeleteBookingRequestCommand}" Width="80" Margin="5"/>
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="1" Margin="0,5,0,0">
+            <TextBlock Text="Фильтр по имени клиента:" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Text="{Binding ClientSearchQuery, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="5"/>
+        </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="1" Margin="0,5,0,0">
-                <TextBlock Text="Фильтр по имени клиента:" VerticalAlignment="Center" Margin="5"/>
-                <TextBox Text="{Binding ClientSearchQuery, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="5"/>
-            </StackPanel>
-        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="2" Margin="0,5,0,0">
+            <TextBlock Text="Клиент:" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <TextBlock Text="{Binding ClientFullName}" VerticalAlignment="Center" Margin="5"/>
 
-        <!-- Таблица с заявками -->
-        <DataGrid x:Name="BookingRequestsGrid" Grid.Row="1"
+            <TextBlock Text="Сотрудник:" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <TextBlock Text="{Binding EmployeeFullName}" VerticalAlignment="Center" Margin="5"/>
+        </StackPanel>
+
+        <DataGrid x:Name="BookingRequestsGrid" Grid.Row="3"
                   AutoGenerateColumns="False"
                   IsReadOnly="False"
                   CanUserAddRows="False"
