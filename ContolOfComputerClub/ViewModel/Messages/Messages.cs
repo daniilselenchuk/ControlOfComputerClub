@@ -90,4 +90,35 @@ namespace ControlOfComputerClub.ViewModel.Messages
     /// </summary>
     public class CloseAddBookingRequestWindowMessage { }
 
+    /// <summary>
+    /// Сообщение для открытия диалога выбора.
+    /// </summary>
+    public class OpenSelectionDialogMessage
+    {
+        public string SelectionType { get; }
+
+        public OpenSelectionDialogMessage(string selectionType)
+        {
+            SelectionType = selectionType;
+        }
+    }
+
+    /// <summary>
+    /// Сообщение для закрытия диалога выбора.
+    /// </summary>
+    public class CloseSelectionDialogMessage { }
+
+    /// <summary>
+    /// Сообщение, которое отправляется при выборе элемента в диалоге выбора.
+    /// </summary>
+    public class SelectionChosenMessage
+    {
+        public object SelectedItem { get; }
+
+        public SelectionChosenMessage(object selectedItem)
+        {
+            SelectedItem = selectedItem;
+        }
+    }
+
 }

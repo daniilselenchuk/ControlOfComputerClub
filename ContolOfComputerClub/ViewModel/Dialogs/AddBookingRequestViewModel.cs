@@ -18,8 +18,26 @@ namespace ControlOfComputerClub.ViewModel
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now.AddHours(1) 
             };
+            WeakReferenceMessenger.Default.Register<SelectionChosenMessage>(this, HandleSelectionChosen);
         }
 
+        [RelayCommand]
+        private void OpenEmployeeSelection()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenSelectionDialogMessage("Employee"));
+        }
+
+        [RelayCommand]
+        private void OpenWorkplaceSelection()
+        {
+            WeakReferenceMessenger.Default.Send(new OpenSelectionDialogMessage("Workplace"));
+        }
+
+        [RelayCommand]
+        private void OpenClientSelection()
+        { 
+            WeakReferenceMessenger.Default.Send(new OpenSelectionDialogMessage("Client"));
+        }
 
         [RelayCommand]
         private void Save()
@@ -35,6 +53,25 @@ namespace ControlOfComputerClub.ViewModel
         private void Cancel()
         {
             WeakReferenceMessenger.Default.Send(new CloseAddBookingRequestWindowMessage());
+        }
+
+        private void HandleSelectionChosen(object recipient, SelectionChosenMessage message)
+        {
+            switch (message.SelectedItem)
+            {
+                case Employee employee:
+                    BookingRequest.EmployeeId = employee.EmployeeId;
+                    OnPropertyChanged(nameof(BookingRequest));
+                    break;
+                case Workplace workplace:
+                    BookingRequest.WorkplaceId = workplace.WorkplaceId;
+                    OnPropertyChanged(nameof(BookingRequest));
+                    break;
+                case Client client:
+                    BookingRequest.ClientId = client.ClientId;
+                    OnPropertyChanged(nameof(BookingRequest));
+                    break;
+            }
         }
     }
 }

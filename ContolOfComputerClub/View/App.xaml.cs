@@ -4,6 +4,8 @@ using ControlOfComputerClub.ViewModel;
 using ControlOfComputerClub.ViewModel.Messages;
 using ControlOfComputerClub.View.Dialogs;
 using System.IO;
+using ControlOfComputerClub.Model;
+using System.Collections.ObjectModel;
 
 namespace ControlOfComputerClub.View
 {
@@ -35,6 +37,8 @@ namespace ControlOfComputerClub.View
             WeakReferenceMessenger.Default.Register<AddClientMessage>(this, HandleAddClientMessage);
             WeakReferenceMessenger.Default.Register<AddWorkplaceMessage>(this, HandleAddWorkplaceMessage);
             WeakReferenceMessenger.Default.Register<AddBookingRequestMessage>(this, HandleAddBookingRequestMessage);
+            WeakReferenceMessenger.Default.Register<OpenSelectionDialogMessage>(this, HandleOpenSelectionDialogMessage);
+            WeakReferenceMessenger.Default.Register<CloseSelectionDialogMessage>(this, HandleCloseSelectionDialogMessage);
         }
 
         private void HandleExitMessage(object recipient, ExitMessage message)
@@ -155,6 +159,31 @@ namespace ControlOfComputerClub.View
             window.ShowDialog();
         }
 
+        private void HandleOpenSelectionDialogMessage(object recipient, OpenSelectionDialogMessage message)
+        {
+            ObservableCollection<object> items;
+
+            using var db = new ApplicationDbContext();
+            items = message.SelectionType switch
+            {
+                "Employee" => new ObservableCollection<object>(db.Employees.ToList()),
+                "Workplace" => new ObservableCollection<object>(db.Workplaces.ToList()),
+                "Client" => new ObservableCollection<object>(db.Clients.ToList()),
+                _ => new ObservableCollection<object>()
+            };
+
+            var window = new SelectionDialogWindow
+            {
+                DataContext = new SelectionDialogViewModel(items)
+            };
+            window.ShowDialog();
+        }
+
+        private void HandleCloseSelectionDialogMessage(object recipient, CloseSelectionDialogMessage message)
+        {
+            var window = Application.Current.Windows.OfType<SelectionDialogWindow>().FirstOrDefault();
+            window?.Close();
+        }
 
         private void RegisterAddClientWindowClose(Window window)
         {

@@ -50,5 +50,10 @@ namespace ControlOfComputerClub.Model
         }
 
         public void Validate() => ValidateAllProperties();
+
+        public override string ToString()
+        {
+            return $"{Name} - {JobTitle}";
+        }
     }
 }

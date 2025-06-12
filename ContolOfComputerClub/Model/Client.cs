@@ -49,5 +49,10 @@ namespace ControlOfComputerClub.Model
         {
             ValidateAllProperties();
         }
+
+        public override string ToString()
+        {
+            return $"{Name} - {PhoneNumber}";
+        }
     }
 }
