@@ -1,37 +1,62 @@
 ﻿<UserControl x:Class="ControlOfComputerClub.View.Controls.QueryControl1"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d">
-
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <GroupBox Header="Запросы по данным" Margin="8" Padding="8">
+        <GroupBox Header="Таблица" Margin="8" Padding="6">
             <StackPanel Orientation="Horizontal">
                 <RadioButton Content="Сотрудники"
-                             IsChecked="{Binding IsEmployeesSelected, Mode=TwoWay}"
-                             Margin="10 0"
-                             GroupName="QueryGroup"/>
+                             IsChecked="{Binding IsEmployeesSelected}"
+                             GroupName="Table"/>
                 <RadioButton Content="Рабочие места"
-                             IsChecked="{Binding IsWorkplacesSelected, Mode=TwoWay}"
-                             Margin="10 0"
-                             GroupName="QueryGroup"/>
+                             IsChecked="{Binding IsWorkplacesSelected}"
+                             GroupName="Table"/>
                 <RadioButton Content="Заявки"
-                             IsChecked="{Binding IsBookingsSelected, Mode=TwoWay}"
-                             Margin="10 0"
-                             GroupName="QueryGroup"/>
+                             IsChecked="{Binding IsBookingsSelected}"
+                             GroupName="Table"/>
             </StackPanel>
         </GroupBox>
 
-        <DataGrid Grid.Row="1"
+        <GroupBox Header="Тип запроса" Grid.Row="1" Margin="8,0,8,8" Padding="6">
+            <StackPanel Orientation="Horizontal">
+                <RadioButton Content="Базовый"
+                     IsChecked="{Binding IsBasic}"
+                     GroupName="Mode"/>
+                <RadioButton Content="WHERE"
+                     IsChecked="{Binding IsWhere}"
+                     GroupName="Mode"/>
+                <RadioButton Content="JOIN"
+                     IsChecked="{Binding IsJoin}"
+                     GroupName="Mode"/>
+                <RadioButton Content="Агрегаты"
+                     IsChecked="{Binding IsAggregate}"
+                     GroupName="Mode"/>
+                <RadioButton Content="Полный SELECT"
+                     IsChecked="{Binding IsFull}"
+                     GroupName="Mode"/>
+
+                <TextBox Width="150" Margin="20,0,0,0"
+                 VerticalAlignment="Center"
+                 Text="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"
+                 ToolTip="Введите имя клиента"/>
+
+                <Button Content="Искать"
+                Padding="6,2"
+                Margin="4,0,0,0"
+                Command="{Binding SearchClientCommand}"
+                VerticalAlignment="Center"/>
+            </StackPanel>
+        </GroupBox>
+
+        <DataGrid Grid.Row="2"
                   ItemsSource="{Binding QueryResults}"
-                  Margin="8"
                   AutoGenerateColumns="True"
-                  IsReadOnly="True"/>
+                  IsReadOnly="True"
+                  Margin="8"/>
     </Grid>
 </UserControl>
