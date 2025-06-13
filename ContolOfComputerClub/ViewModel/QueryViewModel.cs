@@ -59,21 +59,24 @@ public partial class QueryViewModel : ObservableObject
 
     private void Refresh()
     {
-        string sql = BuildSql();
-        QueryResults = Load(sql);
+        string sqlQuery = GetSqlQuery();
+        QueryResults = Load(sqlQuery);
     }
 
-    private string BuildSql()
+    private string GetSqlQuery()
     {
-        if (IsEmployeesSelected) return BuildEmployeesSql();
-        if (IsWorkplacesSelected) return BuildWorkplacesSql();
-        return BuildBookingsSql();
+        if (IsEmployeesSelected) return GetEmployeesSqlQuery();
+        if (IsWorkplacesSelected) return GetWorkplacesSqlQuery();
+        return GetBookingsRequestsSqlQuery();
     }
 
-    private string BuildEmployeesSql()
+    private string GetEmployeesSqlQuery()
     {
+        // Корелированный.
         if (IsBasic)
-            return "SELECT EmployeeId AS [ID], Name AS [ФИО], JobTitle AS [Должность] FROM Employees";
+            return "SELECT * FROM Employees WHERE JobTitle = 'Администратор' " +
+                "AND EmployeeId " +
+                "IN (SELECT DISTINCT EmployeeId FROM BookingRequests)";
 
         if (IsWhere)
             return "SELECT * FROM Employees WHERE JobTitle = 'Администратор'";
@@ -98,10 +101,14 @@ public partial class QueryViewModel : ObservableObject
                "ORDER BY [Заявок] DESC";
     }
 
-    private string BuildWorkplacesSql()
+    private string GetWorkplacesSqlQuery()
     {
+        /// Корелированный запрос.
         if (IsBasic)
-            return "SELECT WorkplaceId AS [ID], Configuration AS [Конфигурация] FROM Workplaces";
+            return 
+                "SELECT * FROM Workplaces " + 
+                "WHERE WorkplaceId IN " +
+                "(SELECT DISTINCT WorkplaceId FROM BookingRequests)";
 
         if (IsWhere)
             return "SELECT * FROM Workplaces WHERE Tariff > 250";
@@ -113,7 +120,7 @@ public partial class QueryViewModel : ObservableObject
                    "GROUP BY w.Configuration";
 
         if (IsAggregate)
-            return "SELECT COUNT(*) AS [Всего мест], " +
+            return "SELECT COUNT (*) AS [Всего мест], " +
                    "SUM(CAST(PriceOfWorkplace AS decimal(18,2))) AS [Инвестиции], " +
                    "AVG(CAST(Tariff AS decimal(18,2))) AS [Средний тариф], " +
                    "MIN(CAST(Tariff AS decimal(18,2))) AS [Мин тариф], " +
@@ -131,10 +138,12 @@ public partial class QueryViewModel : ObservableObject
                "ORDER BY [Окупаемость (часов)] DESC";
     }
 
-    private string BuildBookingsSql()
+    private string GetBookingsRequestsSqlQuery()
     {
+        /// Некорелированный запрос.
         if (IsBasic)
-            return "SELECT TOP 20 * FROM BookingRequests";
+            return "SELECT TOP 20 * FROM BookingRequests " +
+                   "WHERE WorkplaceId IN (SELECT WorkplaceId FROM Workplaces WHERE Tariff > (SELECT AVG(Tariff) FROM Workplaces))";
 
         if (IsWhere)
             return "SELECT * FROM BookingRequests WHERE RequestStatus = 'Подтверждено'";
@@ -179,7 +188,7 @@ public partial class QueryViewModel : ObservableObject
             "SELECT ClientId AS [ID], Name AS [Клиент] " +
             "FROM Clients WHERE Name LIKE @name + '%'";
 
-        var param = new SqlParameter("@name", SqlDbType.NVarChar) { Value = SearchName };
+        SqlParameter param = new SqlParameter("@name", SqlDbType.NVarChar) { Value = SearchName };
         QueryResults = LoadWithParams(sql, param);
     }
 

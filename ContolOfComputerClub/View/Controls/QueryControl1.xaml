@@ -11,17 +11,17 @@
         <GroupBox Header="Таблица" Margin="8" Padding="6">
             <StackPanel Orientation="Horizontal">
                 <RadioButton Content="Сотрудники"
-                             IsChecked="{Binding IsEmployeesSelected}"
-                             GroupName="Table"/>
+                     IsChecked="{Binding IsEmployeesSelected}"
+                     GroupName="Table"/>
                 <RadioButton Content="Рабочие места"
-                             IsChecked="{Binding IsWorkplacesSelected}"
-                             GroupName="Table"/>
+                     IsChecked="{Binding IsWorkplacesSelected}"
+                     GroupName="Table"/>
                 <RadioButton Content="Заявки"
-                             IsChecked="{Binding IsBookingsSelected}"
-                             GroupName="Table"/>
+                     IsChecked="{Binding IsBookingsSelected}"
+                     GroupName="Table"/>
             </StackPanel>
         </GroupBox>
-
+        
         <GroupBox Header="Тип запроса" Grid.Row="1" Margin="8,0,8,8" Padding="6">
             <StackPanel Orientation="Horizontal">
                 <RadioButton Content="Базовый"
