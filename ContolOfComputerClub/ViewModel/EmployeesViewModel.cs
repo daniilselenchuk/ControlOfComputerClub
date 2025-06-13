@@ -7,6 +7,9 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ControlOfComputerClub.Model;
 using ControlOfComputerClub.ViewModel.Messages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ControlOfComputerClub.ViewModel
 {
@@ -38,7 +41,6 @@ namespace ControlOfComputerClub.ViewModel
                     CurrentEmployee.Photo = message.Value;
                 }
             });
-
         }
 
         [RelayCommand]
@@ -46,7 +48,10 @@ namespace ControlOfComputerClub.ViewModel
         {
             using (var db = new ApplicationDbContext())
             {
-                Employees = new ObservableCollection<Employee>(db.Employees.ToList());
+                var employeesList = db.Employees
+                    .FromSqlRaw(@"SELECT EmployeeId, Name, PhoneNumber, JobTitle, NumberPassport, Photo FROM Employees")
+                    .ToList();
+                Employees = new ObservableCollection<Employee>(employeesList);
             }
             if (Employees.Count > 0)
                 CurrentEmployee = Employees[0];
@@ -59,22 +64,58 @@ namespace ControlOfComputerClub.ViewModel
 
             using (var db = new ApplicationDbContext())
             {
-                var existingEmployee = db.Employees.FirstOrDefault(e => e.EmployeeId == CurrentEmployee.EmployeeId);
+                var existingEmployee = db.Employees
+                    .FromSqlRaw(@"SELECT EmployeeId, Name, PhoneNumber, JobTitle, NumberPassport, Photo 
+                                  FROM Employees 
+                                  WHERE EmployeeId = {0}", CurrentEmployee.EmployeeId)
+                    .FirstOrDefault();
+
+                var photoParam = new SqlParameter("@Photo", SqlDbType.VarBinary, -1)
+                {
+                    Value = CurrentEmployee.Photo ?? (object)DBNull.Value
+                };
+
                 if (existingEmployee != null)
                 {
-                    existingEmployee.Name = CurrentEmployee.Name;
-                    existingEmployee.PhoneNumber = CurrentEmployee.PhoneNumber;
-                    existingEmployee.JobTitle = CurrentEmployee.JobTitle;
-                    existingEmployee.NumberPassport = CurrentEmployee.NumberPassport;
-                    existingEmployee.Photo = CurrentEmployee.Photo;
+                    string updateQuery = 
+                        @"UPDATE Employees 
+                        SET Name = @Name, PhoneNumber = @PhoneNumber, JobTitle = @JobTitle,
+                        NumberPassport = @NumberPassport, Photo = @Photo 
+                        WHERE EmployeeId = @EmployeeId";
+
+                    var parameters = new[]
+                    {
+                        new SqlParameter("@Name", CurrentEmployee.Name ?? string.Empty),
+                        new SqlParameter("@PhoneNumber", CurrentEmployee.PhoneNumber ?? string.Empty),
+                        new SqlParameter("@JobTitle", CurrentEmployee.JobTitle ?? string.Empty),
+                        new SqlParameter("@NumberPassport", CurrentEmployee.NumberPassport ?? string.Empty),
+                        photoParam,
+                        new SqlParameter("@EmployeeId", CurrentEmployee.EmployeeId)
+                    };
+
+                    db.Database.ExecuteSqlRaw(updateQuery, parameters);
                 }
                 else
                 {
-                    db.Employees.Add(CurrentEmployee);
+                    string insertQuery = @"
+                        INSERT INTO Employees 
+                        (Name, PhoneNumber, JobTitle, NumberPassport, Photo) 
+                        VALUES 
+                        (@Name, @PhoneNumber, @JobTitle, @NumberPassport, @Photo)";
+
+                    var parameters = new[]
+                    {
+                        new SqlParameter("@Name", CurrentEmployee.Name ?? string.Empty),
+                        new SqlParameter("@PhoneNumber", CurrentEmployee.PhoneNumber ?? string.Empty),
+                        new SqlParameter("@JobTitle", CurrentEmployee.JobTitle ?? string.Empty),
+                        new SqlParameter("@NumberPassport", CurrentEmployee.NumberPassport ?? string.Empty),
+                        photoParam
+                    };
+
+                    db.Database.ExecuteSqlRaw(insertQuery, parameters);
                 }
-                db.SaveChanges();
-                LoadEmployees();
             }
+            LoadEmployees();
         }
 
         [RelayCommand]
@@ -125,13 +166,14 @@ namespace ControlOfComputerClub.ViewModel
         private void DeleteEmployee()
         {
             if (CurrentEmployee == null) return;
+
             using (var db = new ApplicationDbContext())
             {
-                var employeeToDelete = db.Employees.FirstOrDefault(e => e.EmployeeId == CurrentEmployee.EmployeeId);
-                if (employeeToDelete != null)
+                string deleteQuery = "DELETE FROM Employees WHERE EmployeeId = @EmployeeId";
+                var parameter = new SqlParameter("@EmployeeId", CurrentEmployee.EmployeeId);
+                int rowsAffected = db.Database.ExecuteSqlRaw(deleteQuery, parameter);
+                if (rowsAffected > 0)
                 {
-                    db.Employees.Remove(employeeToDelete);
-                    db.SaveChanges();
                     Employees.Remove(CurrentEmployee);
                     CurrentEmployee = Employees.Count > 0 ? Employees[0] : null;
                 }
@@ -143,7 +185,6 @@ namespace ControlOfComputerClub.ViewModel
         {
             WeakReferenceMessenger.Default.Send(new OpenFileDialogMessage());
         }
-
 
         partial void OnCurrentEmployeeChanged(Employee? oldValue, Employee? newValue)
         {
