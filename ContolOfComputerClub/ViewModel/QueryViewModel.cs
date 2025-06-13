@@ -72,7 +72,6 @@ public partial class QueryViewModel : ObservableObject
 
     private string GetEmployeesSqlQuery()
     {
-        // Корелированный.
         if (IsBasic)
             return "SELECT * FROM Employees WHERE JobTitle = 'Администратор' " +
                 "AND EmployeeId " +
@@ -103,12 +102,13 @@ public partial class QueryViewModel : ObservableObject
 
     private string GetWorkplacesSqlQuery()
     {
-        /// Корелированный запрос.
+        //Корелированный!
         if (IsBasic)
-            return 
-                "SELECT * FROM Workplaces " + 
-                "WHERE WorkplaceId IN " +
-                "(SELECT DISTINCT WorkplaceId FROM BookingRequests)";
+            return "SELECT WorkplaceId, Tariff , Status FROM Workplaces " +
+                "WHERE WorkplaceId " +
+                "IN (SELECT WorkplaceId " +
+                "FROM BookingRequests " +
+                "WHERE WorkplaceId = BookingRequests.WorKplaceId AND Tariff > 160 ) ";
 
         if (IsWhere)
             return "SELECT * FROM Workplaces WHERE Tariff > 250";
@@ -140,7 +140,7 @@ public partial class QueryViewModel : ObservableObject
 
     private string GetBookingsRequestsSqlQuery()
     {
-        /// Некорелированный запрос.
+        //Некорелированный.
         if (IsBasic)
             return "SELECT TOP 20 * FROM BookingRequests " +
                    "WHERE WorkplaceId IN (SELECT WorkplaceId FROM Workplaces WHERE Tariff > (SELECT AVG(Tariff) FROM Workplaces))";
