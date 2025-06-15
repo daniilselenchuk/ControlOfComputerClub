@@ -40,6 +40,8 @@ namespace ControlOfComputerClub.View
             WeakReferenceMessenger.Default.Register<OpenSelectionDialogMessage>(this, HandleOpenSelectionDialogMessage);
             WeakReferenceMessenger.Default.Register<CloseSelectionDialogMessage>(this, HandleCloseSelectionDialogMessage);
             WeakReferenceMessenger.Default.Register<OpenQueryWindowMessage>(this, HandleOpenQueryWindowMessage);
+            WeakReferenceMessenger.Default.Register<OpenWorkplaceSelectionDialogMessage>(this, HandleOpenWorkplaceSelectionMessage);
+
         }
 
         private void HandleExitMessage(object recipient, ExitMessage message)
@@ -195,6 +197,23 @@ namespace ControlOfComputerClub.View
                 window.DataContext = viewModel;
             }
             window.ShowDialog();
+        }
+        private void HandleOpenWorkplaceSelectionMessage(object recipient, OpenWorkplaceSelectionDialogMessage message)
+        {
+            var workplaces = new ObservableCollection<object>(message.Workplaces.Cast<object>().ToList());
+            var window = new SelectionDialogWindow
+            {
+                DataContext = new SelectionDialogViewModel(workplaces)
+            };
+            var result = window.ShowDialog();
+            if (result == true)
+            {
+                var viewModel = (SelectionDialogViewModel)window.DataContext;
+                if (viewModel.SelectedItem is Workplace selectedWorkplace)
+                {
+                    WeakReferenceMessenger.Default.Send(new WorkplaceSelectedMessage(selectedWorkplace));
+                }
+            }
         }
 
         private void RegisterAddClientWindowClose(Window window)

@@ -36,14 +36,24 @@ namespace ControlOfComputerClub.ViewModel
         {
             LoadBookingRequests();
 
-            WeakReferenceMessenger.Default.Register<BookingRequest>(this, (r, newBookingRequest) =>
+            WeakReferenceMessenger.Default.Register<BookingRequest>(this, OnNewBookingRequestReceived);
+
+            WeakReferenceMessenger.Default.Register<SelectionChosenMessage>(this, (_, message) =>
             {
-                using var db = new ApplicationDbContext();
-                db.BookingRequests.Add(newBookingRequest);
-                db.SaveChanges();
-                LoadBookingRequests();
-                CurrentBookingRequest = BookingRequests.FirstOrDefault(x => x.BookingRequestId == newBookingRequest.BookingRequestId);
+                if (CurrentBookingRequest != null && message.SelectedItem is Workplace workplace)
+                {
+                    CurrentBookingRequest.WorkplaceId = workplace.WorkplaceId;
+                }
             });
+        }
+
+        private void OnNewBookingRequestReceived(object recipient, BookingRequest newBookingRequest)
+        {
+            using var db = new ApplicationDbContext();
+            db.BookingRequests.Add(newBookingRequest);
+            db.SaveChanges();
+            LoadBookingRequests();
+            CurrentBookingRequest = BookingRequests.FirstOrDefault(x => x.BookingRequestId == newBookingRequest.BookingRequestId);
         }
 
         [RelayCommand]
@@ -184,6 +194,15 @@ namespace ControlOfComputerClub.ViewModel
                 CurrentBookingRequest = BookingRequests.Count > 0 ? BookingRequests[0] : null;
             }
         }
+
+        [RelayCommand]
+        private void ShowWorkplacesSelectionDialog()
+        {
+            using var db = new ApplicationDbContext();
+            var workplaces = new ObservableCollection<Workplace>(db.Workplaces.ToList());
+            WeakReferenceMessenger.Default.Send(new OpenWorkplaceSelectionDialogMessage(workplaces));
+        }
+
         partial void OnCurrentBookingRequestChanged(BookingRequest? oldValue, BookingRequest? newValue)
         {
             using var db = new ApplicationDbContext();

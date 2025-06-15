@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using ControlOfComputerClub.Model;
+using System.Collections.ObjectModel;
 
 namespace ControlOfComputerClub.ViewModel.Messages
 {
@@ -128,4 +130,23 @@ namespace ControlOfComputerClub.ViewModel.Messages
     {
     }
 
+    public class OpenWorkplaceSelectionDialogMessage
+    {
+        public ObservableCollection<Workplace> Workplaces { get; }
+
+        public OpenWorkplaceSelectionDialogMessage(ObservableCollection<Workplace> workplaces)
+        {
+            Workplaces = workplaces;
+        }
+    }
+
+    public class WorkplaceSelectedMessage
+    {
+        public Workplace SelectedWorkplace { get; }
+
+        public WorkplaceSelectedMessage(Workplace selectedWorkplace)
+        {
+            SelectedWorkplace = selectedWorkplace;
+        }
+    }
 }

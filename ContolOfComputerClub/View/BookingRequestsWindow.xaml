@@ -64,9 +64,19 @@
                 <DataGridTextColumn Header="ID сотрудника"
                                     Binding="{Binding EmployeeId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     Width="2*"/>
-                <DataGridTextColumn Header="ID рабочего места"
-                                    Binding="{Binding WorkplaceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="2*"/>
+                <DataGridTemplateColumn Header="Рабочее место" Width="2*" IsReadOnly="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="{Binding WorkplaceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center" Margin="5"/>
+                                <Button Content="🔍"
+                        Command="{Binding DataContext.ShowWorkplacesSelectionDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Margin="5"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="ID клиента"
                                     Binding="{Binding ClientId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     Width="2*"/>
@@ -86,7 +96,7 @@
                         </Style>
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
-                
+
                 <DataGridComboBoxColumn Header="Статус заявки"
                                         SelectedValueBinding="{Binding RequestStatus, Mode=TwoWay}"
                                         Width="2*">
