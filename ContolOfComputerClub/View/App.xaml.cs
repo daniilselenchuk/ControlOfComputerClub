@@ -6,6 +6,7 @@ using ControlOfComputerClub.View.Dialogs;
 using System.IO;
 using ControlOfComputerClub.Model;
 using System.Collections.ObjectModel;
+using View;
 
 namespace ControlOfComputerClub.View
 {
@@ -17,12 +18,30 @@ namespace ControlOfComputerClub.View
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            EntranceWindow entranceWindow = new EntranceWindow();
+            entranceWindow.LoginSuccessful += OnLoginSuccessful;
+            entranceWindow.Show();
+            /*
             MainWindow mainWindow = new MainWindow();
             MainViewModel mainViewModel = new MainViewModel();
             mainWindow.DataContext = mainViewModel;
             ProcessMessages();
             RegisterErrorHandler();
             mainWindow.Show();
+            */
+        }
+
+
+        private void OnLoginSuccessful(object sender, EventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            MainViewModel mainViewModel = new MainViewModel();
+            mainWindow.DataContext = mainViewModel;
+            ProcessMessages();
+            RegisterErrorHandler();
+            mainWindow.Show();
+            var entranceWindow = Application.Current.Windows.OfType<EntranceWindow>().FirstOrDefault();
+            entranceWindow?.Close();
         }
 
         private void ProcessMessages()
